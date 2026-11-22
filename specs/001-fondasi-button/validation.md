@@ -1,26 +1,27 @@
 # Validation: Feature 001
 
 **Date**: 2026-11-22
-**Scope**: Implementation verification for `specs/001-fondasi-button/`.
+**Scope**: Independent implementation verification for `specs/001-fondasi-button/`.
+**Implementation**: `agent/senior-frontend-engineer/e29c3e9ffd0e` (based on `main`, replacing the reference implementation with an independent one).
 
 ## Automated evidence
 
 | Command | Result |
 | --- | --- |
-| `pnpm build` | Passed: UI `tsc` emit, docs generation, registry build, Next.js production build |
-| `pnpm check` | Passed: tokens (19 colors + 8 radius), literals, contrast including state surfaces, docs parity, freshness, registry identity, size (1335 bytes gzip ≤ 4096) |
-| `pnpm test` | Passed: 3 files, 17 tests (variants, sizes, states, asChild, keyboard, loading, registry-copy parity, sidecar version) |
-| `pnpm test:e2e` | Passed: 14 Playwright tests — axe light/dark (preview and both docs pages), target size/320 px, focus outline, reduced motion, theme token change, copy-vs-package computed parity, locale switcher, theme toggle, `llms.txt`, registry item |
-| Copy installation | `shadcn add http://localhost:3000/r/button.json` created `components/ui/button.tsx`, `lib/utils.ts`, `components/ui/button.legion.json`, and merged theme variables into `app/globals.css` |
-| Copy consumer | `fixtures/copy-consumer` rendered the copied component on port 3001; parity test passed against the package preview |
+| `pnpm build` | Passed: UI `tsc` emit, docs generation, registry build, Next.js production build for both locales |
+| `pnpm check` | Passed: 19 semantic colours + radius, token literals, 48 contrast checks, docs parity, freshness, registry identity, size (1550 B gzip ≤ 4096 B) |
+| `pnpm test` | Passed: 3 files, 46 tests (matrix, states, keyboard, loading, asChild, refs, copy-vs-package markup parity, sidecar version) |
+| `pnpm test:e2e` | Passed: 20 Playwright tests — axe light/dark (preview and both docs pages), 320 px target size, 200% zoom, focus outline, reduced motion, loading status, theme token change, copy-vs-package markup/computed parity, locale switching with theme preservation, `llms.txt`, registry metadata |
+| Copy consumer | `fixtures/copy-consumer` renders the registry contents on port 3001; package and copy markup and computed styles match |
 
-Playwright was run with a locally patched headless Chromium because this sandbox lacks the system libraries/fonts Playwright expects. CI uses the standard `playwright install --with-deps chromium` path.
+E2E was executed against production builds in the official Playwright 1.65.1 Linux container because this sandbox is Alpine/musl and the downloaded Chromium build requires glibc. CI uses the standard `playwright install --with-deps chromium` path on Ubuntu.
 
-## Not yet run (Converge/QA)
+## Deviations and open items
 
-- Manual screen-reader, forced-colors, and assistive-technology pass in `packages/ui/src/components/ui/button.a11y.md` (remaining items are `not-run`).
-- Five-participant usability test for SC-002.
-- Three AI baseline tasks for SC-007; task and result format exist in `evals/ai-baseline/`.
-- First-load JS measurement for the docs pages (bundle size budget is verified; Next route payload measurement is still pending).
+- The implementation was built independently from `main`; `main` already contained the Tech Lead implementation, so this branch replaces those implementation files while keeping the shared spec, plan, data model, contracts, and tasks. No Tech Lead component, script, or documentation implementation was copied.
+- The AI baseline tasks (SC-007) were not run against an agent without repository context; `evals/ai-baseline/` remains ready for the Converge step.
+- The five-participant usability test (SC-002) was not run; this is a human QA activity.
+- First-load JS per docs route was not measured from `.next`; the Button gzip budget is measured.
+- Screen-reader output was not exercised with a real assistive technology. Loading announcement is verified through the single persistent `role="status"` node; manual AT evidence remains a Converge item.
 
-`Converged` is therefore not claimed yet. Implementation and automated gates are green; human/QA checks remain.
+`Converged` is not claimed. Automated build, static checks, unit tests, and browser tests are green.

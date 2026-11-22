@@ -1,50 +1,40 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { ROOT } from "./theme-utils.ts";
+import { dirname, resolve } from "node:path";
 
-type RegistryItem = {
-  files: Array<{ type: string; content?: string }>;
-  cssVars?: { light: Record<string, string>; dark: Record<string, string>; theme: Record<string, string> };
-};
+type RegistryItem = { files?: { path: string; target?: string; content?: string }[] };
 
-function readItem(name: string): RegistryItem {
-  return JSON.parse(readFileSync(resolve(ROOT, "apps/docs/public/r", `${name}.json`), "utf8")) as RegistryItem;
+const ROOT = process.cwd();
+const fixture = resolve(ROOT, "fixtures/copy-consumer");
+const buttonItem = JSON.parse(
+  readFileSync(resolve(ROOT, "apps/docs/public/r/button.json"), "utf8"),
+) as RegistryItem;
+const utilsItem = JSON.parse(
+  readFileSync(resolve(ROOT, "apps/docs/public/r/utils.json"), "utf8"),
+) as RegistryItem;
+
+const buttonFile = buttonItem.files?.find((file) => file.path.endsWith("button.tsx"));
+const sidecarFile = buttonItem.files?.find((file) => file.target === "@ui/button.legion.json");
+const utilsFile = utilsItem.files?.[0];
+if (!buttonFile?.content || !sidecarFile?.content || !utilsFile?.content) {
+  throw new Error("registry output is missing button, sidecar, or utils content");
 }
 
-const button = readItem("button").files.find((file) => file.type === "registry:ui");
-const utils = readItem("utils").files.find((file) => file.type === "registry:lib");
-const theme = readItem("theme").cssVars;
-if (!button?.content || !utils?.content || !theme) throw new Error("Registry content is incomplete");
+const generated: [string, string][] = [
+  ["components/ui/button.tsx", buttonFile.content],
+  ["components/ui/button.legion.json", sidecarFile.content],
+  ["lib/utils.ts", utilsFile.content],
+];
 
-const fixture = resolve(ROOT, "fixtures/copy-consumer");
-mkdirSync(resolve(fixture, "components/ui"), { recursive: true });
-mkdirSync(resolve(fixture, "lib"), { recursive: true });
-writeFileSync(resolve(fixture, "components/ui/button.tsx"), button.content);
-writeFileSync(resolve(fixture, "lib/utils.ts"), utils.content);
+for (const [path, content] of generated) {
+  const target = resolve(fixture, path);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, content);
+}
 
-const declarations = (values: Record<string, string>, indent: string) =>
-  Object.entries(values)
-    .map(([name, value]) => `${indent}--${name}: ${value};`)
-    .join("\n");
-
+const theme = readFileSync(resolve(ROOT, "packages/ui/src/styles/theme.css"), "utf8");
 writeFileSync(
   resolve(fixture, "app/globals.css"),
-  `@import "tailwindcss";
-@source "../components";
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-${declarations(theme.theme, "  ")}
-}
-
-:root {
-${declarations(theme.light, "  ")}
-}
-
-.dark {
-${declarations(theme.dark, "  ")}
-}
-`,
+  `${theme}\n@source "../components";\n\nbody {\n  background-color: var(--background);\n  color: var(--foreground);\n}\n`,
 );
 
-console.log("Prepared copy-consumer fixture from the built registry.");
+console.log("prepare:copy-fixture installed the registry button, sidecar, utils, and theme.");

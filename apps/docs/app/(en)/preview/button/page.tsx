@@ -1,15 +1,30 @@
+import type { Metadata } from "next";
+
 import { ButtonShowcase } from "@/components/button-showcase";
-import { SiteHeader } from "@/components/site-header";
+import { DICTIONARIES } from "@/i18n";
+
+export const metadata: Metadata = {
+  title: "Button preview",
+  description: "Every Button variant, size, and state rendered for visual and accessibility checks.",
+  alternates: {
+    canonical: "/preview/button",
+  },
+};
 
 export default function ButtonPreviewPage() {
+  const dictionary = DICTIONARIES.en;
+
   return (
-    <>
-      <SiteHeader locale="en" />
-      <main className="mx-auto max-w-5xl px-6 py-10" data-testid="button-preview">
-        <h1 className="mb-6 text-2xl font-semibold text-foreground">Button preview</h1>
-        <h2 className="mb-4 text-lg font-medium text-foreground">Variants and states</h2>
-        <ButtonShowcase locale="en" />
-      </main>
-    </>
+    <main className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
+      <header className="space-y-2">
+        <p className="text-sm font-medium text-muted-foreground">{dictionary.componentLabel}</p>
+        <h1 className="text-3xl font-semibold tracking-tight">Button preview</h1>
+        <p className="max-w-2xl text-muted-foreground">
+          The matrix below is the package Button. Switch the theme from the header and every cell
+          follows without a component-level override.
+        </p>
+      </header>
+      <ButtonShowcase locale="en" />
+    </main>
   );
 }

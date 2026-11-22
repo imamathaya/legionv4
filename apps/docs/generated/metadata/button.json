@@ -2,19 +2,17 @@
   "schemaVersion": 1,
   "name": "button",
   "title": "Button",
-  "description": "A token-driven action control with five variants, three sizes, and six states.",
+  "description": "Token-driven action control with five variants, three sizes, and six states.",
   "version": "0.1.0",
   "type": "registry:ui",
   "files": [
     "packages/ui/src/components/ui/button.tsx",
-    "packages/ui/src/lib/utils.ts"
+    "packages/ui/registry/button.legion.json"
   ],
   "dependencies": [
     "@radix-ui/react-slot",
     "class-variance-authority",
-    "clsx",
-    "lucide-react",
-    "tailwind-merge"
+    "lucide-react"
   ],
   "registryDependencies": [
     "http://localhost:3000/r/theme.json",
@@ -28,14 +26,14 @@
     "ghost"
   ],
   "sizes": [
-    "sm",
     "default",
+    "sm",
     "lg"
   ],
   "props": [
     {
       "name": "variant",
-      "type": "ButtonVariant",
+      "type": "\"default\" | \"secondary\" | \"destructive\" | \"outline\" | \"ghost\"",
       "required": false,
       "defaultValue": "default",
       "descriptions": {
@@ -45,7 +43,7 @@
     },
     {
       "name": "size",
-      "type": "ButtonSize",
+      "type": "\"default\" | \"sm\" | \"lg\"",
       "required": false,
       "defaultValue": "default",
       "descriptions": {
@@ -54,23 +52,13 @@
       }
     },
     {
-      "name": "className",
-      "type": "string",
-      "required": false,
-      "defaultValue": null,
-      "descriptions": {
-        "en": "Extra classes merged after the variant classes.",
-        "id": "Kelas tambahan yang digabungkan setelah kelas varian."
-      }
-    },
-    {
       "name": "asChild",
       "type": "boolean",
       "required": false,
       "defaultValue": "false",
       "descriptions": {
-        "en": "Renders the child element instead of a button while keeping button styles and accessibility attributes.",
-        "id": "Merender elemen anak alih-alih elemen button sambil mempertahankan gaya dan atribut aksesibilitas."
+        "en": "Renders the single child element instead of a native button.",
+        "id": "Merender satu elemen anak sebagai ganti tombol native."
       }
     },
     {
@@ -79,61 +67,82 @@
       "required": false,
       "defaultValue": "false",
       "descriptions": {
-        "en": "Disables activation and announces a busy state to assistive technology.",
-        "id": "Menonaktifkan aktivasi dan mengumumkan status sibuk ke teknologi bantu."
+        "en": "Blocks activation and exposes a busy state while true.",
+        "id": "Memblokir aktivasi dan menampilkan status sibuk selama bernilai benar."
       }
     },
     {
       "name": "loadingLabel",
       "type": "string",
       "required": false,
-      "defaultValue": "Loading",
+      "defaultValue": "\"Loading\"",
       "descriptions": {
-        "en": "Screen-reader status text used while loading is true.",
-        "id": "Teks status untuk pembaca layar selama loading bernilai true."
+        "en": "Screen-reader text announced once while loading is true.",
+        "id": "Teks untuk pembaca layar yang diumumkan sekali selama status memuat."
+      }
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "defaultValue": null,
+      "descriptions": {
+        "en": "Extra classes merged after variant classes.",
+        "id": "Kelas tambahan yang digabungkan setelah kelas varian."
       }
     }
   ],
   "examples": [
     {
       "title": "Basic",
+      "description": "A primary action with the default variant and size.",
       "codePath": "apps/docs/examples/button/basic.tsx"
     },
     {
-      "title": "Icon only",
-      "codePath": "apps/docs/examples/button/icon.tsx"
+      "title": "Variants",
+      "description": "All five visual variants side by side.",
+      "codePath": "apps/docs/examples/button/variants.tsx"
     },
     {
-      "title": "Link with asChild",
-      "codePath": "apps/docs/examples/button/link.tsx"
+      "title": "Sizes",
+      "description": "The small, default, and large sizes.",
+      "codePath": "apps/docs/examples/button/sizes.tsx"
     },
     {
-      "title": "Loading",
+      "title": "Loading and disabled",
+      "description": "Busy and disabled states with an announced loading label.",
       "codePath": "apps/docs/examples/button/loading.tsx"
     },
     {
-      "title": "All variants",
-      "codePath": "apps/docs/examples/button/variants.tsx"
+      "title": "Icons",
+      "description": "An icon-only button with an accessible name and an icon with text.",
+      "codePath": "apps/docs/examples/button/icon.tsx"
+    },
+    {
+      "title": "Link composition",
+      "description": "asChild renders an anchor with button styling and link semantics.",
+      "codePath": "apps/docs/examples/button/link.tsx"
     }
   ],
   "a11y": {
     "standard": "WCAG 2.2 AA",
     "criteria": [
-      "1.4.1",
       "1.4.3",
+      "1.4.11",
       "1.4.4",
       "1.4.10",
-      "1.4.11",
+      "2.1.1",
       "2.4.7",
       "2.4.11",
-      "2.5.7",
       "2.5.8",
-      "3.3.2",
       "4.1.2",
-      "4.1.3"
+      "1.4.1",
+      "2.5.7",
+      "3.3.2"
     ],
+    "notes": "Automated axe, contrast, keyboard, zoom, and reduced-motion checks pass; manual evidence is recorded in the checklist.",
     "checklistPath": "packages/ui/src/components/ui/button.a11y.md",
-    "manualStatus": "not-run"
+    "manualStatus": "pass"
   },
   "docs": {
     "defaultLocale": "en",

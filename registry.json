@@ -7,7 +7,7 @@
       "name": "theme",
       "type": "registry:theme",
       "title": "Legion v4 theme",
-      "description": "Semantic light and dark tokens for Legion v4.",
+      "description": "Semantic light and dark tokens plus their Tailwind mappings.",
       "cssVars": {
         "light": {},
         "dark": {},
@@ -18,7 +18,7 @@
       "name": "utils",
       "type": "registry:lib",
       "title": "Legion cn utility",
-      "description": "The class merge helper used by Legion components.",
+      "description": "Joins conditional class names and resolves Tailwind conflicts.",
       "dependencies": ["clsx", "tailwind-merge"],
       "files": [
         {
@@ -32,13 +32,11 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "A token-driven action control with five variants, three sizes, and six states.",
+      "description": "Token-driven action control with five variants, three sizes, and six states.",
       "dependencies": [
         "@radix-ui/react-slot",
         "class-variance-authority",
-        "clsx",
-        "lucide-react",
-        "tailwind-merge"
+        "lucide-react"
       ],
       "registryDependencies": [
         "http://localhost:3000/r/theme.json",

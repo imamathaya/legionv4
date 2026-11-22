@@ -4,90 +4,93 @@
   "homepage": "http://localhost:3000",
   "items": [
     {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "theme",
       "type": "registry:theme",
       "title": "Legion v4 theme",
-      "description": "Semantic light and dark tokens for Legion v4.",
+      "description": "Semantic light and dark tokens plus their Tailwind mappings.",
       "cssVars": {
         "light": {
-          "background": "oklch(1 0 0)",
-          "foreground": "oklch(0.145 0 0)",
-          "card": "oklch(1 0 0)",
-          "card-foreground": "oklch(0.145 0 0)",
-          "popover": "oklch(1 0 0)",
-          "popover-foreground": "oklch(0.145 0 0)",
-          "primary": "oklch(0.45 0.18 293)",
-          "primary-foreground": "oklch(0.985 0 0)",
-          "secondary": "oklch(0.965 0.005 293)",
-          "secondary-foreground": "oklch(0.25 0.02 293)",
-          "muted": "oklch(0.965 0 0)",
-          "muted-foreground": "oklch(0.45 0 0)",
-          "accent": "oklch(0.955 0.02 293)",
-          "accent-foreground": "oklch(0.25 0.03 293)",
-          "destructive": "oklch(0.577 0.245 27.325)",
-          "destructive-foreground": "oklch(0.985 0 0)",
-          "border": "oklch(0.9 0 0)",
-          "input": "oklch(0.62 0 0)",
-          "ring": "oklch(0.55 0.2 293)",
-          "radius": "0.625rem"
+          "--radius": "0.625rem",
+          "--background": "oklch(1 0 0)",
+          "--foreground": "oklch(0.145 0 0)",
+          "--card": "oklch(1 0 0)",
+          "--card-foreground": "oklch(0.145 0 0)",
+          "--popover": "oklch(1 0 0)",
+          "--popover-foreground": "oklch(0.145 0 0)",
+          "--primary": "oklch(0.205 0 0)",
+          "--primary-foreground": "oklch(0.985 0 0)",
+          "--secondary": "oklch(0.97 0 0)",
+          "--secondary-foreground": "oklch(0.205 0 0)",
+          "--muted": "oklch(0.97 0 0)",
+          "--muted-foreground": "oklch(0.45 0 0)",
+          "--accent": "oklch(0.95 0 0)",
+          "--accent-foreground": "oklch(0.205 0 0)",
+          "--destructive": "oklch(0.577 0.245 27.325)",
+          "--destructive-foreground": "oklch(0.985 0 0)",
+          "--border": "oklch(0.922 0 0)",
+          "--input": "oklch(0.64 0 0)",
+          "--ring": "oklch(0.55 0.18 265)"
         },
         "dark": {
-          "background": "oklch(0.145 0 0)",
-          "foreground": "oklch(0.985 0 0)",
-          "card": "oklch(0.205 0 0)",
-          "card-foreground": "oklch(0.985 0 0)",
-          "popover": "oklch(0.205 0 0)",
-          "popover-foreground": "oklch(0.985 0 0)",
-          "primary": "oklch(0.78 0.14 293)",
-          "primary-foreground": "oklch(0.205 0.03 293)",
-          "secondary": "oklch(0.3 0.01 293)",
-          "secondary-foreground": "oklch(0.985 0 0)",
-          "muted": "oklch(0.3 0 0)",
-          "muted-foreground": "oklch(0.78 0 0)",
-          "accent": "oklch(0.32 0.02 293)",
-          "accent-foreground": "oklch(0.985 0 0)",
-          "destructive": "oklch(0.704 0.191 22.216)",
-          "destructive-foreground": "oklch(0.205 0 0)",
-          "border": "oklch(1 0 0 / 12%)",
-          "input": "oklch(1 0 0 / 50%)",
-          "ring": "oklch(0.78 0.14 293)",
-          "radius": "0.625rem"
+          "--radius": "0.625rem",
+          "--background": "oklch(0.145 0 0)",
+          "--foreground": "oklch(0.985 0 0)",
+          "--card": "oklch(0.205 0 0)",
+          "--card-foreground": "oklch(0.985 0 0)",
+          "--popover": "oklch(0.205 0 0)",
+          "--popover-foreground": "oklch(0.985 0 0)",
+          "--primary": "oklch(0.922 0 0)",
+          "--primary-foreground": "oklch(0.205 0 0)",
+          "--secondary": "oklch(0.269 0 0)",
+          "--secondary-foreground": "oklch(0.985 0 0)",
+          "--muted": "oklch(0.269 0 0)",
+          "--muted-foreground": "oklch(0.708 0 0)",
+          "--accent": "oklch(0.269 0 0)",
+          "--accent-foreground": "oklch(0.985 0 0)",
+          "--destructive": "oklch(0.704 0.191 22.216)",
+          "--destructive-foreground": "oklch(0.205 0 0)",
+          "--border": "oklch(1 0 0 / 10%)",
+          "--input": "oklch(0.58 0 0)",
+          "--ring": "oklch(0.708 0 0)"
         },
         "theme": {
-          "color-background": "var(--background)",
-          "color-foreground": "var(--foreground)",
-          "color-card": "var(--card)",
-          "color-card-foreground": "var(--card-foreground)",
-          "color-popover": "var(--popover)",
-          "color-popover-foreground": "var(--popover-foreground)",
-          "color-primary": "var(--primary)",
-          "color-primary-foreground": "var(--primary-foreground)",
-          "color-secondary": "var(--secondary)",
-          "color-secondary-foreground": "var(--secondary-foreground)",
-          "color-muted": "var(--muted)",
-          "color-muted-foreground": "var(--muted-foreground)",
-          "color-accent": "var(--accent)",
-          "color-accent-foreground": "var(--accent-foreground)",
-          "color-destructive": "var(--destructive)",
-          "color-destructive-foreground": "var(--destructive-foreground)",
-          "color-border": "var(--border)",
-          "color-input": "var(--input)",
-          "color-ring": "var(--ring)",
-          "radius-sm": "calc(var(--radius) * 0.6)",
-          "radius-md": "calc(var(--radius) * 0.8)",
-          "radius-lg": "var(--radius)",
-          "radius-xl": "calc(var(--radius) * 1.4)",
-          "radius-2xl": "calc(var(--radius) * 1.8)",
-          "radius-3xl": "calc(var(--radius) * 2.2)",
-          "radius-4xl": "calc(var(--radius) * 2.6)"
+          "--color-background": "var(--background)",
+          "--color-foreground": "var(--foreground)",
+          "--color-card": "var(--card)",
+          "--color-card-foreground": "var(--card-foreground)",
+          "--color-popover": "var(--popover)",
+          "--color-popover-foreground": "var(--popover-foreground)",
+          "--color-primary": "var(--primary)",
+          "--color-primary-foreground": "var(--primary-foreground)",
+          "--color-secondary": "var(--secondary)",
+          "--color-secondary-foreground": "var(--secondary-foreground)",
+          "--color-muted": "var(--muted)",
+          "--color-muted-foreground": "var(--muted-foreground)",
+          "--color-accent": "var(--accent)",
+          "--color-accent-foreground": "var(--accent-foreground)",
+          "--color-destructive": "var(--destructive)",
+          "--color-destructive-foreground": "var(--destructive-foreground)",
+          "--color-border": "var(--border)",
+          "--color-input": "var(--input)",
+          "--color-ring": "var(--ring)",
+          "--radius-sm": "calc(var(--radius) * 0.6)",
+          "--radius-md": "calc(var(--radius) * 0.8)",
+          "--radius-lg": "var(--radius)",
+          "--radius-xl": "calc(var(--radius) * 1.4)",
+          "--radius-2xl": "calc(var(--radius) * 1.8)",
+          "--radius-3xl": "calc(var(--radius) * 2.2)",
+          "--radius-4xl": "calc(var(--radius) * 2.6)"
         }
-      }
+      },
+      "files": []
     },
     {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "utils",
       "type": "registry:lib",
       "title": "Legion cn utility",
-      "description": "The class merge helper used by Legion components.",
+      "description": "Joins conditional class names and resolves Tailwind conflicts.",
       "dependencies": [
         "clsx",
         "tailwind-merge"
@@ -96,21 +99,21 @@
         {
           "path": "packages/ui/src/lib/utils.ts",
           "type": "registry:lib",
-          "target": "@lib/utils.ts"
+          "target": "@lib/utils.ts",
+          "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\n/** Joins conditional class names and resolves conflicting Tailwind utilities. */\nexport function cn(...inputs: ClassValue[]): string {\n  return twMerge(clsx(inputs));\n}\n"
         }
       ]
     },
     {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "A token-driven action control with five variants, three sizes, and six states.",
+      "description": "Token-driven action control with five variants, three sizes, and six states.",
       "dependencies": [
         "@radix-ui/react-slot",
         "class-variance-authority",
-        "clsx",
-        "lucide-react",
-        "tailwind-merge"
+        "lucide-react"
       ],
       "registryDependencies": [
         "http://localhost:3000/r/theme.json",
@@ -120,18 +123,20 @@
         {
           "path": "packages/ui/src/components/ui/button.tsx",
           "type": "registry:ui",
-          "target": "@ui/button.tsx"
+          "target": "@ui/button.tsx",
+          "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Slot, Slottable } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { LoaderCircle } from \"lucide-react\";\n\nimport { cn } from \"../../lib/utils\";\n\n/** Visual styles available for Button. */\nexport const buttonVariants = cva(\n  \"inline-flex min-w-0 items-center justify-center gap-2 whitespace-normal rounded-md text-center text-sm font-medium transition outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:animate-none forced-colors:outline\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80\",\n        secondary: \"bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70\",\n        destructive:\n          \"bg-destructive text-destructive-foreground hover:shadow-sm active:shadow-none\",\n        outline:\n          \"border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80\",\n        ghost:\n          \"bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80\",\n      },\n      size: {\n        sm: \"min-h-8 gap-1.5 px-3 text-sm\",\n        default: \"min-h-9 px-4 text-sm\",\n        lg: \"min-h-10 gap-2 px-6 text-base\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  },\n);\n\nexport type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>[\"variant\"]>;\nexport type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>[\"size\"]>;\n\nexport type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {\n  /** Visual style of the button. */\n  variant?: ButtonVariant;\n  /** Control size. */\n  size?: ButtonSize;\n  /** Renders the single child element instead of a native button. */\n  asChild?: boolean;\n  /** Blocks activation and exposes a busy state while true. */\n  loading?: boolean;\n  /** Screen-reader text announced once while loading is true. */\n  loadingLabel?: string;\n  /** Extra classes merged after variant classes. */\n  className?: string;\n};\n\nfunction assignRef<T>(target: React.ForwardedRef<T>, value: T | null): void {\n  if (typeof target === \"function\") {\n    target(value);\n  } else if (target) {\n    target.current = value;\n  }\n}\n\n/** A token-driven action control with five variants, three sizes, and six states. */\nexport const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(\n  {\n    className,\n    variant = \"default\",\n    size = \"default\",\n    asChild = false,\n    loading = false,\n    loadingLabel = \"Loading\",\n    disabled = false,\n    onClick,\n    children,\n    tabIndex,\n    \"aria-busy\": ariaBusy,\n    \"aria-disabled\": ariaDisabled,\n    ...props\n  },\n  forwardedRef,\n) {\n  const Root = asChild ? Slot : \"button\";\n  const inert = disabled || loading;\n  const localRef = React.useRef<HTMLButtonElement | null>(null);\n\n  React.useEffect(() => {\n    if (process.env.NODE_ENV === \"production\") return;\n    const element = localRef.current;\n    if (!element) return;\n    const labelled =\n      element.getAttribute(\"aria-label\") || element.getAttribute(\"aria-labelledby\");\n    const visibleText = (element.textContent ?? \"\").trim();\n    if (!labelled && visibleText.length === 0) {\n      console.warn(\n        \"Button: icon-only buttons need an accessible name (aria-label or aria-labelledby).\",\n      );\n    }\n  }, [children, props[\"aria-label\"], props[\"aria-labelledby\"]]);\n\n  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {\n    if (inert) {\n      event.preventDefault();\n      event.stopPropagation();\n      return;\n    }\n    onClick?.(event);\n  };\n\n  return (\n    <>\n      <Root\n        {...props}\n        ref={(node: HTMLButtonElement | null) => {\n          localRef.current = node;\n          assignRef(forwardedRef, node);\n        }}\n        data-slot=\"button\"\n        data-variant={variant}\n        data-size={size}\n        className={cn(buttonVariants({ variant, size }), className)}\n        aria-busy={loading ? true : ariaBusy}\n        aria-disabled={asChild && inert ? true : ariaDisabled}\n        disabled={asChild ? undefined : inert}\n        tabIndex={asChild && inert ? -1 : tabIndex}\n        onClick={handleClick}\n      >\n        {loading ? (\n          <LoaderCircle\n            aria-hidden=\"true\"\n            data-slot=\"button-spinner\"\n            className=\"size-4 shrink-0 animate-spin motion-reduce:animate-none\"\n          />\n        ) : null}\n        <Slottable>{children}</Slottable>\n      </Root>\n      <span role=\"status\" className=\"sr-only\">\n        {loading ? loadingLabel : null}\n      </span>\n    </>\n  );\n});\n\nButton.displayName = \"Button\";\n"
         },
         {
           "path": "packages/ui/registry/button.legion.json",
           "type": "registry:file",
-          "target": "@ui/button.legion.json"
+          "target": "@ui/button.legion.json",
+          "content": "{\n  \"item\": \"button\",\n  \"version\": \"0.1.0\",\n  \"source\": \"http://localhost:3000/r/button.json\",\n  \"documentation\": {\n    \"en\": \"http://localhost:3000/docs/components/button\",\n    \"id\": \"http://localhost:3000/id/docs/components/button\"\n  }\n}\n"
         }
       ],
       "meta": {
         "legion": {
           "version": "0.1.0",
-          "source": "http://localhost:3000/r/button.json",
+          "repository": "https://github.com/imamathaya/legionv4",
           "docs": {
             "en": "http://localhost:3000/docs/components/button",
             "id": "http://localhost:3000/id/docs/components/button"

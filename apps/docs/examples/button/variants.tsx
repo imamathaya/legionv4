@@ -1,10 +1,8 @@
-"use client";
-
 import { Button } from "@legionv4/ui";
 
-export function VariantExample() {
+export function ButtonVariantsExample() {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-3">
       <Button>Default</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="destructive">Destructive</Button>

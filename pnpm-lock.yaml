@@ -105,6 +105,9 @@ importers:
 
   fixtures/copy-consumer:
     dependencies:
+      '@legionv4/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@radix-ui/react-slot':
         specifier: 1.5.0
         version: 1.5.0(@types/react@19.2.2)(react@19.3.1)

@@ -1,221 +1,115 @@
+# Button
+
+> Token-driven action control with five variants, three sizes, and six states.
+
 ## Preview and variants
 
-Variants: default, secondary, destructive, outline, ghost. Sizes: sm, default, lg. States: default, hover, focus, active, disabled, loading. Open the documentation site to see the live preview in light and dark mode.
+Button is the reference component for Legion v4. It ships five variants (`default`, `secondary`, `destructive`, `outline`, `ghost`) and three sizes (`sm`, `default`, `lg`). Every visual value comes from a semantic token, so the same code renders correctly in light and dark mode.
 
-## Install as package
+The preview above renders the real package source. Change the theme with the switch in the header: no component code changes.
 
-Install the private package and import its token stylesheet:
+## Install as a package
+
+Install the private package and import its stylesheet once in your application root.
 
 ```bash
 pnpm add @legionv4/ui
 ```
 
 ```tsx
-import { Button } from "@legionv4/ui";
 import "@legionv4/ui/styles.css";
-
-export function Example() {
-  return <Button>Save</Button>;
-}
+import { Button } from "@legionv4/ui";
 ```
 
-## Install as copy
+The package expects React 19 and a Tailwind CSS 4 consumer. The stylesheet defines the semantic tokens and their Tailwind mappings.
 
-Copy the component and its dependencies directly into a project that already uses shadcn and Tailwind CSS 4:
+## Install as a copy
+
+Use the shadcn-compatible registry when you want the source in your repository instead of a dependency.
 
 ```bash
-npx shadcn@latest add http://localhost:3000/r/button.json
+pnpm dlx shadcn@4.23.0 add http://localhost:3000/r/button.json
 ```
 
-The copy includes `button.legion.json`, which records the source version and the documentation URLs, so you can tell when the copy falls behind.
+The item depends on the `theme` and `utils` items, so both are installed with it. The generated `components/ui/button.legion.json` sidecar records the source version and documentation URLs, which tells you when your copy falls behind.
 
 ## Usage
 
 ```tsx
-"use client";
-
 import { Button } from "@legionv4/ui";
 
-export function BasicExample() {
-  return <Button>Save</Button>;
-}
-```
+<Button>Save changes</Button>
 
-```tsx
-import { Button } from "@legionv4/ui";
+<Button variant="secondary" size="sm">
+  Cancel
+</Button>
 
-<Button>Save</Button>
-<Button variant="secondary" size="sm">Cancel</Button>
-<Button variant="destructive" loading loadingLabel="Deleting">Delete</Button>
+<Button variant="destructive" loading loadingLabel="Deleting">
+  Delete
+</Button>
+
 <Button variant="outline" asChild>
-  <a href="/docs/components/button">Read the docs</a>
+  <a href="/docs">Read docs</a>
 </Button>
 ```
 
+`asChild` renders the child element with the same styles and accessibility attributes, so links keep link semantics. `loading` disables activation, sets `aria-busy`, and announces `loadingLabel` once through a status region.
+
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `ButtonVariant` | `default` | Visual style of the button. |
-| `size` | `ButtonSize` | `default` | Control size. |
-| `className` | `string` | — | Extra classes merged after the variant classes. |
-| `asChild` | `boolean` | `false` | Renders the child element instead of a button while keeping button styles and accessibility attributes. |
-| `loading` | `boolean` | `false` | Disables activation and announces a busy state to assistive technology. |
-| `loadingLabel` | `string` | `Loading` | Screen-reader status text used while loading is true. |
+The props table below is generated from the TypeScript source and JSDoc. Native button attributes such as `type`, `form`, `onClick`, and `aria-*` are forwarded unchanged.
 
 ## Dependencies
 
-- `@radix-ui/react-slot`
-- `class-variance-authority`
-- `clsx`
-- `lucide-react`
-- `tailwind-merge`
+The dependency list below is generated from the registry item. The component only imports runtime packages that it actually uses; tokens arrive through the theme item.
 
 ## Accessibility
 
-Button targets WCAG 2.2 AA. Every variant and state uses semantic tokens; text meets 4.5:1, control boundaries and focus indicators meet 3:1 in both modes, and targets are at least 24 × 24 CSS px.
+Button targets WCAG 2.2 Level AA. The contract covers:
 
-- Keyboard: Tab reaches the button; Enter and Space activate native buttons; links activate with Enter.
-- Focus: a two-pixel outline with offset remains visible and is never clipped.
-- Loading: `aria-busy` is set, the action is blocked, and the localized `loadingLabel` is announced once.
-- Icon-only: provide `aria-label` or `aria-labelledby`.
-- Motion: the spinner stops under `prefers-reduced-motion`.
-- Zoom and reflow: labels wrap at 200% zoom and 320 px width instead of clipping.
+- Keyboard: Tab focuses; Enter and Space activate native buttons; links activate with Enter.
+- Focus: a token-coloured outline is visible in both modes and is never clipped.
+- Name: visible text names the button; icon-only usage must pass `aria-label` or `aria-labelledby`.
+- Loading: `aria-busy="true"`, a hidden spinner, and one `role="status"` message.
+- Target size: at least 24 × 24 CSS pixels; the `sm` size still meets the minimum height.
+- Contrast: text meets 4.5:1 and control boundaries and focus rings meet 3:1 in both modes.
+- Motion: spinner and transitions stop under `prefers-reduced-motion`.
+- Reflow: long labels wrap, and the control remains usable at 200% zoom and 320 px width.
 
-The manual evidence is recorded in `packages/ui/src/components/ui/button.a11y.md`.
+## Props (generated)
 
-## Source
+| Prop | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| `variant` | `"default" \| "secondary" \| "destructive" \| "outline" \| "ghost"` | default | No | Visual style of the button. |
+| `size` | `"default" \| "sm" \| "lg"` | default | No | Control size. |
+| `asChild` | `boolean` | false | No | Renders the single child element instead of a native button. |
+| `loading` | `boolean` | false | No | Blocks activation and exposes a busy state while true. |
+| `loadingLabel` | `string` | "Loading" | No | Screen-reader text announced once while loading is true. |
+| `className` | `string` | — | No | Extra classes merged after variant classes. |
 
-The documentation renders the same source file that the package and registry copy use.
+## Dependencies (generated)
 
-```tsx
-"use client";
+- `@radix-ui/react-slot`
+- `class-variance-authority`
+- `lucide-react`
+- [http://localhost:3000/r/theme.json](http://localhost:3000/r/theme.json)
+- [http://localhost:3000/r/utils.json](http://localhost:3000/r/utils.json)
 
-import * as React from "react";
-import { Slot, Slottable } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { Loader2 } from "lucide-react";
-import { cn } from "../../lib/utils";
+## Accessibility checklist (generated)
 
-export const buttonVariants = cva(
-  "inline-flex min-w-0 items-center justify-center gap-2 rounded-md text-center font-medium break-words whitespace-normal transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
-        destructive: "bg-destructive text-destructive-foreground hover:shadow-sm active:shadow-none",
-        outline:
-          "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-        ghost: "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-      },
-      size: {
-        sm: "min-h-8 gap-1.5 px-3 py-1.5 text-sm",
-        default: "min-h-9 px-4 py-2 text-sm",
-        lg: "min-h-10 px-6 py-2.5 text-base",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
+Standard: WCAG 2.2 AA · manual status: **pass**
 
-export type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>;
-export type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
+- [x] 1.4.3: Automated contrast check of every token pair in both modes (`pnpm check:contrast`).
+- [x] 1.4.11: Automated contrast check for `--input` and `--ring` against background and card.
+- [x] 1.4.4: Set page zoom to 200% and verify every Button remains visible and operable.
+- [x] 1.4.10: Render at a 320 px viewport and verify no horizontal page overflow.
+- [x] 2.1.1: Tab to the control; Enter and Space activate a native button; Enter activates a link.
+- [x] 2.4.7: Focus an element with `:focus-visible` and assert a visible outline.
+- [x] 2.4.11: Focus Button and verify no overlapping fixed element covers it.
+- [x] 2.5.8: Measure every size including icon-only at least 24 × 24 CSS px.
+- [x] 4.1.2: Icon-only Button has an accessible name; loading sets `aria-busy` and one status message.
+- [x] 1.4.1: Loading is conveyed by a spinner plus status text, not colour alone.
+- [x] 2.5.7: Spinner and transitions stop under reduced motion.
+- [x] 3.3.2: Loading label can be localized for Indonesian documentation.
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  /** Visual style of the button. */
-  variant?: ButtonVariant;
-  /** Control size. */
-  size?: ButtonSize;
-  /** Extra classes merged after the variant classes. */
-  className?: string;
-  /** Renders the child element instead of a button while keeping button styles and accessibility attributes. */
-  asChild?: boolean;
-  /** Disables activation and announces a busy state to assistive technology. */
-  loading?: boolean;
-  /** Screen-reader status text used while loading is true. */
-  loadingLabel?: string;
-}
-
-function containsReadableText(node: React.ReactNode): boolean {
-  if (typeof node === "string" || typeof node === "number") {
-    return String(node).trim().length > 0;
-  }
-  if (Array.isArray(node)) {
-    return node.some(containsReadableText);
-  }
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return containsReadableText(node.props.children);
-  }
-  return false;
-}
-
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  {
-    variant,
-    size,
-    asChild = false,
-    loading = false,
-    loadingLabel = "Loading",
-    className,
-    children,
-    onClick,
-    disabled,
-    tabIndex,
-    ...props
-  },
-  ref,
-) {
-  const isDisabled = Boolean(disabled || loading);
-  const Component = asChild ? Slot : "button";
-
-  if (
-    process.env.NODE_ENV !== "production" &&
-    !containsReadableText(children) &&
-    !props["aria-label"] &&
-    !props["aria-labelledby"]
-  ) {
-    console.warn("Legion Button: provide aria-label or aria-labelledby for icon-only buttons.");
-  }
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (loading) {
-      event.preventDefault();
-      return;
-    }
-    onClick?.(event);
-  };
-
-  return (
-    <Component
-      ref={ref}
-      data-slot="button"
-      data-variant={variant ?? "default"}
-      data-size={size ?? "default"}
-      aria-busy={loading ? true : undefined}
-      aria-disabled={asChild && isDisabled ? true : undefined}
-      disabled={asChild ? undefined : isDisabled}
-      tabIndex={asChild && isDisabled ? -1 : tabIndex}
-      className={cn(buttonVariants({ variant, size }), className)}
-      onClick={handleClick}
-      {...props}
-    >
-      {loading ? <Loader2 aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none" /> : null}
-      {loading ? (
-        <span role="status" className="sr-only">
-          {loadingLabel}
-        </span>
-      ) : null}
-      {asChild ? <Slottable>{children}</Slottable> : children}
-    </Component>
-  );
-});
-
-Button.displayName = "Button";
-```
-
+See `packages/ui/src/components/ui/button.a11y.md` for evidence.

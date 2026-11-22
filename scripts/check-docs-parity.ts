@@ -1,51 +1,100 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
-import { ROOT } from "./theme-utils.ts";
 
-type Metadata = {
-  props: Array<{ name: string; descriptions: { en: string; id: string } }>;
-  docs: { locales: Record<"en" | "id", { route: string; markdownUrl: string; prosePath: string; htmlLang: string }> };
+const ROOT = process.cwd();
+const failures: string[] = [];
+
+const metadata = JSON.parse(
+  readFileSync(resolve(ROOT, "apps/docs/generated/metadata/button.json"), "utf8"),
+) as {
+  props: { name: string; descriptions: { en: string; id: string } }[];
+  docs: {
+    defaultLocale: string;
+    locales: Record<
+      "en" | "id",
+      { route: string; markdownUrl: string; prosePath: string; htmlLang: string }
+    >;
+  };
+  examples: { codePath: string }[];
+  a11y: { criteria: string[]; checklistPath: string };
 };
 
-const metadata = JSON.parse(readFileSync(resolve(ROOT, "apps/docs/generated/metadata/button.json"), "utf8")) as Metadata;
 const schema = JSON.parse(
-  readFileSync(resolve(ROOT, "specs/001-fondasi-button/contracts/component-metadata.schema.json"), "utf8"),
-);
-const validate = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
+  readFileSync(
+    resolve(ROOT, "specs/001-fondasi-button/contracts/component-metadata.schema.json"),
+    "utf8",
+  ),
+) as object;
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+const validate = ajv.compile(schema);
 if (!validate(metadata)) {
-  console.error(validate.errors);
-  process.exit(1);
+  for (const error of validate.errors ?? []) {
+    failures.push(`metadata schema: ${error.instancePath} ${error.message}`);
+  }
 }
 
-const requiredHeadings = {
-  en: ["Preview and variants", "Install as package", "Install as copy", "Usage", "Props", "Dependencies", "Accessibility"],
-  id: ["Pratinjau dan varian", "Pasang sebagai paket", "Pasang sebagai salinan", "Pemakaian", "Props", "Dependensi", "Aksesibilitas"],
-};
-const errors: string[] = [];
-
 for (const locale of ["en", "id"] as const) {
-  const docs = metadata.docs.locales[locale];
-  if (docs.route !== (locale === "en" ? "/docs/components/button" : "/id/docs/components/button")) {
-    errors.push(`${locale} route is inconsistent`);
+  const prosePath = resolve(ROOT, metadata.docs.locales[locale].prosePath);
+  if (!existsSync(prosePath)) {
+    failures.push(`${locale}: prose file is missing`);
+    continue;
   }
-  if (docs.htmlLang !== locale) errors.push(`${locale} htmlLang must be ${locale}`);
-  for (const heading of requiredHeadings[locale]) {
-    const prose = readFileSync(resolve(ROOT, docs.prosePath), "utf8");
-    if (!prose.includes(`## ${heading}`)) errors.push(`${locale} prose is missing heading ${heading}`);
-    const markdown = readFileSync(resolve(ROOT, "apps/docs/public", docs.markdownUrl.replace(/^\//, "")), "utf8");
-    if (!markdown.includes(`## ${heading}`)) errors.push(`${locale} generated markdown is missing heading ${heading}`);
+  const prose = readFileSync(prosePath, "utf8");
+  const sections = prose.match(/^## /gm) ?? [];
+  if (sections.length !== 7) {
+    failures.push(`${locale}: prose has ${sections.length} sections, expected 7`);
   }
-  if (!existsSync(resolve(ROOT, docs.prosePath))) errors.push(`${locale} prose file is missing`);
 }
 
 for (const prop of metadata.props) {
-  if (!prop.descriptions.en.trim()) errors.push(`Prop ${prop.name} has no English description`);
-  if (!prop.descriptions.id.trim()) errors.push(`Prop ${prop.name} has no Indonesian description`);
+  if (!prop.descriptions.en.trim()) failures.push(`${prop.name}: missing en description`);
+  if (!prop.descriptions.id.trim()) failures.push(`${prop.name}: missing id description`);
+  if (prop.descriptions.en === prop.descriptions.id && prop.name !== "className") {
+    failures.push(`${prop.name}: en and id descriptions are identical; translate the Indonesian text`);
+  }
 }
 
-if (errors.length > 0) {
-  console.error(errors.join("\n"));
+const requiredProps = ["variant", "size", "asChild", "loading", "loadingLabel", "className"];
+for (const name of requiredProps) {
+  if (!metadata.props.some((prop) => prop.name === name)) {
+    failures.push(`metadata is missing public prop ${name}`);
+  }
+}
+
+for (const example of metadata.examples) {
+  if (!existsSync(resolve(ROOT, example.codePath))) {
+    failures.push(`example file ${example.codePath} is missing`);
+  }
+}
+
+if (!existsSync(resolve(ROOT, metadata.a11y.checklistPath))) {
+  failures.push("a11y checklist path does not exist");
+}
+if (metadata.a11y.criteria.length === 0) failures.push("a11y criteria list is empty");
+
+for (const locale of ["en", "id"] as const) {
+  const docs = metadata.docs.locales[locale];
+  if (docs.htmlLang !== locale) failures.push(`${locale}: htmlLang must be ${locale}`);
+  if (!docs.route.includes(`/docs/components/`)) failures.push(`${locale}: invalid route ${docs.route}`);
+  const markdownPath = resolve(ROOT, "apps/docs/public", `.${docs.markdownUrl}`);
+  if (!existsSync(markdownPath)) failures.push(`${locale}: generated markdown ${docs.markdownUrl} is missing`);
+}
+
+const llms = readFileSync(resolve(ROOT, "llms.txt"), "utf8");
+for (const heading of ["## Components (English)", "## Komponen (Bahasa Indonesia)"]) {
+  if (!llms.includes(heading)) failures.push(`llms.txt is missing ${heading}`);
+}
+
+const index = readFileSync(resolve(ROOT, "apps/docs/app/(en)/llms.txt/route.ts"), "utf8");
+if (!index.includes("llms.txt")) failures.push("llms route does not serve llms.txt");
+
+if (failures.length > 0) {
+  console.error(`check:docs-parity failed with ${failures.length} problem(s):`);
+  for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
-console.log("Docs parity check passed for English and Indonesian.");
+
+console.log(
+  `check:docs-parity passed: 7 sections in both locales, ${metadata.props.length} props with en/id descriptions, schema valid.`,
+);

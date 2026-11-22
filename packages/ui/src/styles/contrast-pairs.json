@@ -4,10 +4,28 @@
     { "foreground": "--foreground", "background": "--background", "min": 4.5, "kind": "text" },
     { "foreground": "--card-foreground", "background": "--card", "min": 4.5, "kind": "text" },
     { "foreground": "--popover-foreground", "background": "--popover", "min": 4.5, "kind": "text" },
-    { "foreground": "--primary-foreground", "background": "--primary", "min": 4.5, "kind": "text", "stateSurfaceOpacities": [0.9, 0.8] },
-    { "foreground": "--secondary-foreground", "background": "--secondary", "min": 4.5, "kind": "text", "stateSurfaceOpacities": [0.8, 0.7] },
+    {
+      "foreground": "--primary-foreground",
+      "background": "--primary",
+      "min": 4.5,
+      "kind": "text",
+      "stateSurfaceOpacities": [0.9, 0.8]
+    },
+    {
+      "foreground": "--secondary-foreground",
+      "background": "--secondary",
+      "min": 4.5,
+      "kind": "text",
+      "stateSurfaceOpacities": [0.8, 0.7]
+    },
     { "foreground": "--muted-foreground", "background": "--muted", "min": 4.5, "kind": "text" },
-    { "foreground": "--accent-foreground", "background": "--accent", "min": 4.5, "kind": "text", "stateSurfaceOpacities": [0.9, 0.8] },
+    {
+      "foreground": "--accent-foreground",
+      "background": "--accent",
+      "min": 4.5,
+      "kind": "text",
+      "stateSurfaceOpacities": [0.9, 0.8]
+    },
     { "foreground": "--destructive-foreground", "background": "--destructive", "min": 4.5, "kind": "text" },
     { "foreground": "--input", "background": "--background", "min": 3, "kind": "non-text" },
     { "foreground": "--input", "background": "--card", "min": 3, "kind": "non-text" },

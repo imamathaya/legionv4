@@ -1,0 +1,21 @@
+# Legion v4
+
+> Semantic-token React components, a shadcn copy registry, and bilingual documentation.
+
+## Components (English)
+- [Button](http://localhost:3000/docs/components/button): Token-driven action control with five variants, three sizes, and six states.
+- [Button Markdown](http://localhost:3000/docs/components/button.md): Plain-text component reference with props and dependencies.
+- [Button Preview](http://localhost:3000/preview/button): Live matrix of variants, sizes, and states.
+- [Component metadata](http://localhost:3000/r/button.json): Generated props, dependencies, examples, and documentation routes.
+
+## Komponen (Bahasa Indonesia)
+- [Button](http://localhost:3000/id/docs/components/button): Komponen aksi berbasis token dengan lima varian, tiga ukuran, dan enam state.
+- [Button Markdown](http://localhost:3000/id/docs/components/button.md): Referensi komponen teks biasa dengan props dan dependensi.
+- [Pratinjau Button](http://localhost:3000/preview/button): Matriks varian, ukuran, dan state secara langsung.
+
+## Tokens
+- [Theme item](http://localhost:3000/r/theme.json): Semantic light and dark tokens with Tailwind mappings.
+
+## Registry
+- [Registry index](http://localhost:3000/r/registry.json): theme, utils, and button items.
+- [Repository](https://github.com/imamathaya/legionv4): Source, specs, and accessibility checklists.
