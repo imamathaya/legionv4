@@ -1,0 +1,19 @@
+# Legion v4
+
+Design system documentation for AI agents and application developers.
+
+## Components (English)
+
+- [Button](/docs/components/button.md): A token-driven action control with five variants, three sizes, and six states.
+
+## Komponen (Bahasa Indonesia)
+
+- [Button](/id/docs/components/button.md): Kontrol aksi berbasis token dengan lima varian, tiga ukuran, dan enam state.
+
+## Tokens
+
+Token definitions live in `packages/ui/src/styles/theme.css`; every semantic color has light and dark values.
+
+## Registry
+
+- [Button registry item](http://localhost:3000/r/button.json): install with `npx shadcn@latest add http://localhost:3000/r/button.json`.

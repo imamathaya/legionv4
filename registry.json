@@ -1,0 +1,61 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "legionv4",
+  "homepage": "http://localhost:3000",
+  "items": [
+    {
+      "name": "theme",
+      "type": "registry:theme",
+      "title": "Legion v4 theme",
+      "description": "Semantic light and dark tokens for Legion v4.",
+      "cssVars": {
+        "light": {},
+        "dark": {},
+        "theme": {}
+      }
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Legion cn utility",
+      "description": "The class merge helper used by Legion components.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "@lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "A token-driven action control with five variants, three sizes, and six states.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "lucide-react",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "http://localhost:3000/r/theme.json",
+        "http://localhost:3000/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "type": "registry:ui",
+          "target": "@ui/button.tsx"
+        },
+        {
+          "path": "packages/ui/registry/button.legion.json",
+          "type": "registry:file",
+          "target": "@ui/button.legion.json"
+        }
+      ]
+    }
+  ]
+}

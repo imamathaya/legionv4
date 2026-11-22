@@ -24,15 +24,15 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 **Purpose**: Inisialisasi workspace, paket, situs dokumentasi, dan perkakas pemeriksaan.
 
-- [ ] T001 Buat fondasi monorepo di `package.json`, `pnpm-workspace.yaml`, `.npmrc`, `.nvmrc`, dan `.gitignore`: workspace `apps/*`, `packages/*`, `fixtures/*`, Node 24, pnpm 10.
-- [ ] T002 [P] Buat `tsconfig.base.json` (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) serta `packages/ui/tsconfig.json` dan `packages/ui/tsconfig.build.json` untuk emit ESM + deklarasi ke `dist/`.
-- [ ] T003 [P] Buat `packages/ui/package.json` untuk `@legionv4/ui` (`private: true`, peer React 19, `exports` `.` dan `./styles.css`, `publishConfig.exports` ke `dist/`).
-- [ ] T004 [P] Scaffold `apps/docs` (Next 16 App Router, TypeScript, Tailwind 4, MDX) di `apps/docs/package.json`, `apps/docs/next.config.ts`, `apps/docs/postcss.config.mjs`, `apps/docs/tsconfig.json`, layout root kedua locale, dan `apps/docs/app/globals.css` yang mengimpor `@legionv4/ui/styles.css` serta `@source` ke sumber paket.
-- [ ] T005 Tambahkan devDependencies dan skrip root di `package.json`: `build`, `docs:dev`, `check`, `check:tokens`, `check:token-literals`, `check:contrast`, `check:freshness`, `check:docs-parity`, `check:registry`, `check:size`, `test`, `test:e2e`.
-- [ ] T006 [P] Konfigurasi Vitest di `vitest.config.ts` (jsdom) dan `packages/ui/test/setup.ts` (Testing Library cleanup, jest-dom matchers).
-- [ ] T007 [P] Konfigurasi Playwright di `playwright.config.ts`: webServer `pnpm docs:dev`, proyek light/dark, viewport 320 px dan zoom 200% lewat halaman uji, locale `en`/`id`.
-- [ ] T008 [P] Buat `registry.config.json` (base URL `http://localhost:3000`, docs `en`/`id`) dan skeleton `registry.json` berisi item `theme`, `utils`, `button`.
-- [ ] T009 [P] Buat skeleton CI di `.github/workflows/ci.yml`: install, build, check, unit, e2e, artifact log.
+- [x] T001 Buat fondasi monorepo di `package.json`, `pnpm-workspace.yaml`, `.npmrc`, `.nvmrc`, dan `.gitignore`: workspace `apps/*`, `packages/*`, `fixtures/*`, Node 24, pnpm 10.
+- [x] T002 [P] Buat `tsconfig.base.json` (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) serta `packages/ui/tsconfig.json` dan `packages/ui/tsconfig.build.json` untuk emit ESM + deklarasi ke `dist/`.
+- [x] T003 [P] Buat `packages/ui/package.json` untuk `@legionv4/ui` (`private: true`, peer React 19, `exports` `.` dan `./styles.css`, `publishConfig.exports` ke `dist/`).
+- [x] T004 [P] Scaffold `apps/docs` (Next 16 App Router, TypeScript, Tailwind 4, MDX) di `apps/docs/package.json`, `apps/docs/next.config.ts`, `apps/docs/postcss.config.mjs`, `apps/docs/tsconfig.json`, layout root kedua locale, dan `apps/docs/app/globals.css` yang mengimpor `@legionv4/ui/styles.css` serta `@source` ke sumber paket.
+- [x] T005 Tambahkan devDependencies dan skrip root di `package.json`: `build`, `docs:dev`, `check`, `check:tokens`, `check:token-literals`, `check:contrast`, `check:freshness`, `check:docs-parity`, `check:registry`, `check:size`, `test`, `test:e2e`.
+- [x] T006 [P] Konfigurasi Vitest di `vitest.config.ts` (jsdom) dan `packages/ui/test/setup.ts` (Testing Library cleanup, jest-dom matchers).
+- [x] T007 [P] Konfigurasi Playwright di `playwright.config.ts`: webServer `pnpm docs:dev`, proyek light/dark, viewport 320 px dan zoom 200% lewat halaman uji, locale `en`/`id`.
+- [x] T008 [P] Buat `registry.config.json` (base URL `http://localhost:3000`, docs `en`/`id`) dan skeleton `registry.json` berisi item `theme`, `utils`, `button`.
+- [x] T009 [P] Buat skeleton CI di `.github/workflows/ci.yml`: install, build, check, unit, e2e, artifact log.
 
 **Checkpoint**: Workspace dan toolchain siap; belum ada komponen.
 
@@ -42,12 +42,12 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 **Purpose**: Token, manifest kontras, dan checker yang menjadi dasar semua user story. Tidak ada user story yang boleh mulai sebelum phase ini selesai.
 
-- [ ] T010 Implementasikan token di `packages/ui/src/styles/theme.css`: primitive, 19 warna semantic light/dark, `--radius` dua mode, turunan `--radius-*` di `@theme inline`, `@custom-variant dark`, dan pemetaan `--color-*`. Rujukan field: `data-model.md` `Token.name`, `Token.kind`, `Token.valueLight`, `Token.valueDark`, `Token.pair`, `Token.tailwindName`.
-- [ ] T011 [P] Buat `packages/ui/src/styles/contrast-pairs.json` sesuai `data-model.md` `ContrastPair.foreground`, `ContrastPair.background`, `ContrastPair.min`, `ContrastPair.kind`, `ContrastPair.stateSurfaceOpacities`.
-- [ ] T012 Implementasikan `scripts/check-tokens.ts`: kelengkapan nama baku, nilai light/dark, format `oklch()`/`rem`/`calc`, pemetaan `@theme inline`, dan larangan token di luar daftar. Rujuk `data-model.md` `Token.name` dan `Token.valueLight`/`Token.valueDark`.
-- [ ] T013 [P] Implementasikan `scripts/check-token-literals.ts`: AST TypeScript untuk string literal kelas dan parser CSS `postcss`; izinkan `oklch()` hanya di definisi token `styles/theme.css`. Rujuk `data-model.md` §1.2.
-- [ ] T014 [P] Implementasikan `scripts/check-contrast.ts` dengan `colorjs.io`: alpha dikompositkan, opasitas state diuji di atas `--background` dan `--card`, ambang per `ContrastPair.min`.
-- [ ] T015 [P] Implementasikan `packages/ui/src/lib/utils.ts` berisi `cn()` dari `clsx` + `tailwind-merge`.
+- [x] T010 Implementasikan token di `packages/ui/src/styles/theme.css`: primitive, 19 warna semantic light/dark, `--radius` dua mode, turunan `--radius-*` di `@theme inline`, `@custom-variant dark`, dan pemetaan `--color-*`. Rujukan field: `data-model.md` `Token.name`, `Token.kind`, `Token.valueLight`, `Token.valueDark`, `Token.pair`, `Token.tailwindName`.
+- [x] T011 [P] Buat `packages/ui/src/styles/contrast-pairs.json` sesuai `data-model.md` `ContrastPair.foreground`, `ContrastPair.background`, `ContrastPair.min`, `ContrastPair.kind`, `ContrastPair.stateSurfaceOpacities`.
+- [x] T012 Implementasikan `scripts/check-tokens.ts`: kelengkapan nama baku, nilai light/dark, format `oklch()`/`rem`/`calc`, pemetaan `@theme inline`, dan larangan token di luar daftar. Rujuk `data-model.md` `Token.name` dan `Token.valueLight`/`Token.valueDark`.
+- [x] T013 [P] Implementasikan `scripts/check-token-literals.ts`: AST TypeScript untuk string literal kelas dan parser CSS `postcss`; izinkan `oklch()` hanya di definisi token `styles/theme.css`. Rujuk `data-model.md` §1.2.
+- [x] T014 [P] Implementasikan `scripts/check-contrast.ts` dengan `colorjs.io`: alpha dikompositkan, opasitas state diuji di atas `--background` dan `--card`, ambang per `ContrastPair.min`.
+- [x] T015 [P] Implementasikan `packages/ui/src/lib/utils.ts` berisi `cn()` dari `clsx` + `tailwind-merge`.
 
 **Checkpoint**: Token lolos `check:tokens`, literal bersih, kontras lolos; user story dapat dimulai.
 
@@ -61,25 +61,25 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 ### Tests for User Story 1
 
-- [ ] T016 [P] [US1] Tulis test matriks varian dan ukuran di `packages/ui/test/button.test.tsx`; assert kelas token, `data-variant`, `data-size`, dan tidak ada literal. Rujuk `contracts/button-api.md` §3–§4 dan `data-model.md` `Button.variant`/`Button.size`.
-- [ ] T017 [P] [US1] Tulis test state, `asChild`, keyboard, dan loading di `packages/ui/test/button.states.test.tsx`; assert `aria-busy`, status diumumkan sekali, dan tidak ada aksi saat loading. Rujuk `contracts/button-api.md` §5–§7 dan `data-model.md` `Button.state`.
-- [ ] T018 [US1] Tulis `e2e/button.a11y.spec.ts`: axe di light/dark, fokus tidak tertutup, target ≥24 px, zoom 200%, lebar 320 px, `prefers-reduced-motion`. Bergantung pada T019.
-- [ ] T019 [P] [US1] Buat harness `apps/docs/app/(en)/preview/button/page.tsx` yang merender semua varian, ukuran, state, mode, dan contoh ikon untuk e2e.
-- [ ] T020 [US1] Tulis `e2e/button.parity.spec.ts` yang merender Button paket dan Button salinan di fixture, lalu membandingkan markup, atribut, dan perilaku. Bergantung pada T028 dan T030.
+- [x] T016 [P] [US1] Tulis test matriks varian dan ukuran di `packages/ui/test/button.test.tsx`; assert kelas token, `data-variant`, `data-size`, dan tidak ada literal. Rujuk `contracts/button-api.md` §3–§4 dan `data-model.md` `Button.variant`/`Button.size`.
+- [x] T017 [P] [US1] Tulis test state, `asChild`, keyboard, dan loading di `packages/ui/test/button.states.test.tsx`; assert `aria-busy`, status diumumkan sekali, dan tidak ada aksi saat loading. Rujuk `contracts/button-api.md` §5–§7 dan `data-model.md` `Button.state`.
+- [x] T018 [US1] Tulis `e2e/button.a11y.spec.ts`: axe di light/dark, fokus tidak tertutup, target ≥24 px, zoom 200%, lebar 320 px, `prefers-reduced-motion`. Bergantung pada T019.
+- [x] T019 [P] [US1] Buat harness `apps/docs/app/(en)/preview/button/page.tsx` yang merender semua varian, ukuran, state, mode, dan contoh ikon untuk e2e.
+- [x] T020 [US1] Tulis `e2e/button.parity.spec.ts` yang merender Button paket dan Button salinan di fixture, lalu membandingkan markup, atribut, dan perilaku. Bergantung pada T028 dan T030.
 
 ### Implementation for User Story 1
 
-- [ ] T021 [US1] Implementasikan `packages/ui/src/components/ui/button.tsx`: CVA lima varian/tiga ukuran, token-only classes, `asChild` via Radix Slot, state loading, `data-slot`, `data-variant`, `data-size`. Rujuk `data-model.md` `Button.variant`, `Button.size`, `Button.state`.
-- [ ] T022 [US1] Lengkapi JSDoc satu kalimat untuk setiap props dan ekspor `Button`, `buttonVariants`, `ButtonProps`, `ButtonVariant`, `ButtonSize` dari `packages/ui/src/index.ts`. Rujuk `data-model.md` `Prop.name`, `Prop.type`, `Prop.required`, `Prop.defaultValue`.
-- [ ] T023 [P] [US1] Buat `packages/ui/src/components/ui/button.a11y.md` (Inggris) dengan butir WCAG dan field `A11yChecklist.criterion`, `A11yChecklist.method`, `A11yChecklist.result`, `A11yChecklist.evidence`, `A11yChecklist.reviewer`.
-- [ ] T024 [US1] Selesaikan build paket: `tsc` menghasilkan `packages/ui/dist/components/ui/button.js` + `.d.ts`, salin `styles.css` ke `dist/`, dan verifikasi import relatif `../../lib/utils` tanpa alias `@/`.
-- [ ] T025 [P] [US1] Implementasikan `scripts/check-size.ts` dengan `zlib.gzipSync` untuk budget 4 kB pada `dist/components/ui/button.js`.
-- [ ] T026 [US1] Implementasikan item `theme` di `scripts/build-registry.ts` dan `registry.json`: bangkitkan `cssVars.light`, `cssVars.dark`, `cssVars.theme` dari `theme.css`; rujuk `data-model.md` `ThemeItem.cssVars`.
-- [ ] T027 [P] [US1] Implementasikan item `utils` (`registry:lib`, `@lib/utils.ts`) di `registry.json` dari `packages/ui/src/lib/utils.ts`.
-- [ ] T028 [US1] Implementasikan item `button` + stempel versi: jalankan `shadcn build`, tambah `meta.legion`, sidecar `@ui/button.legion.json`, dan `registryDependencies` theme/utils. Rujuk `data-model.md` `RegistryItem.name`, `RegistryItem.type`, `RegistryItem.files`, `RegistryItem.meta.legion`, `RegistryFile.path`, `RegistryFile.type`, `RegistryFile.target`, `RegistryFile.content`, `Sidecar.item`, `Sidecar.version`, `Sidecar.source`, `Sidecar.documentation`.
-- [ ] T029 [US1] Implementasikan `scripts/check-registry.ts`: identitas byte file kode = sumber, versi item = `packages/ui/package.json`, sidecar punya `version` dan URL `documentation` en/id, dependensi metadata = impor. Rujuk `data-model.md` `Sidecar.version`.
-- [ ] T030 [US1] Buat fixture `fixtures/copy-consumer/` (Next/Vite + Tailwind 4 + `components.json`) yang memasang `http://localhost:3000/r/button.json`; pastikan `button.legion.json` tertulis.
-- [ ] T031 [US1] Jalankan `pnpm build`, `pnpm test`, `pnpm test:e2e` untuk US1 dan perbaiki sampai `packages/ui/dist/`, `apps/docs/public/r/button.json`, serta `e2e/button.parity.spec.ts` hijau.
+- [x] T021 [US1] Implementasikan `packages/ui/src/components/ui/button.tsx`: CVA lima varian/tiga ukuran, token-only classes, `asChild` via Radix Slot, state loading, `data-slot`, `data-variant`, `data-size`. Rujuk `data-model.md` `Button.variant`, `Button.size`, `Button.state`.
+- [x] T022 [US1] Lengkapi JSDoc satu kalimat untuk setiap props dan ekspor `Button`, `buttonVariants`, `ButtonProps`, `ButtonVariant`, `ButtonSize` dari `packages/ui/src/index.ts`. Rujuk `data-model.md` `Prop.name`, `Prop.type`, `Prop.required`, `Prop.defaultValue`.
+- [x] T023 [P] [US1] Buat `packages/ui/src/components/ui/button.a11y.md` (Inggris) dengan butir WCAG dan field `A11yChecklist.criterion`, `A11yChecklist.method`, `A11yChecklist.result`, `A11yChecklist.evidence`, `A11yChecklist.reviewer`.
+- [x] T024 [US1] Selesaikan build paket: `tsc` menghasilkan `packages/ui/dist/components/ui/button.js` + `.d.ts`, salin `styles.css` ke `dist/`, dan verifikasi import relatif `../../lib/utils` tanpa alias `@/`.
+- [x] T025 [P] [US1] Implementasikan `scripts/check-size.ts` dengan `zlib.gzipSync` untuk budget 4 kB pada `dist/components/ui/button.js`.
+- [x] T026 [US1] Implementasikan item `theme` di `scripts/build-registry.ts` dan `registry.json`: bangkitkan `cssVars.light`, `cssVars.dark`, `cssVars.theme` dari `theme.css`; rujuk `data-model.md` `ThemeItem.cssVars`.
+- [x] T027 [P] [US1] Implementasikan item `utils` (`registry:lib`, `@lib/utils.ts`) di `registry.json` dari `packages/ui/src/lib/utils.ts`.
+- [x] T028 [US1] Implementasikan item `button` + stempel versi: jalankan `shadcn build`, tambah `meta.legion`, sidecar `@ui/button.legion.json`, dan `registryDependencies` theme/utils. Rujuk `data-model.md` `RegistryItem.name`, `RegistryItem.type`, `RegistryItem.files`, `RegistryItem.meta.legion`, `RegistryFile.path`, `RegistryFile.type`, `RegistryFile.target`, `RegistryFile.content`, `Sidecar.item`, `Sidecar.version`, `Sidecar.source`, `Sidecar.documentation`.
+- [x] T029 [US1] Implementasikan `scripts/check-registry.ts`: identitas byte file kode = sumber, versi item = `packages/ui/package.json`, sidecar punya `version` dan URL `documentation` en/id, dependensi metadata = impor. Rujuk `data-model.md` `Sidecar.version`.
+- [x] T030 [US1] Buat fixture `fixtures/copy-consumer/` (Next/Vite + Tailwind 4 + `components.json`) yang memasang `http://localhost:3000/r/button.json`; pastikan `button.legion.json` tertulis.
+- [x] T031 [US1] Jalankan `pnpm build`, `pnpm test`, `pnpm test:e2e` untuk US1 dan perbaiki sampai `packages/ui/dist/`, `apps/docs/public/r/button.json`, serta `e2e/button.parity.spec.ts` hijau.
 
 **Checkpoint**: US1 selesai dan dapat didemokan sebagai MVP; US2 dapat mulai.
 
@@ -93,22 +93,22 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 ### Tests for User Story 2
 
-- [ ] T032 [P] [US2] Tulis `e2e/docs.locales.spec.ts`: tujuh bagian di `/docs/components/button` dan `/id/docs/components/button`, `lang`, `hreflang`, pengalih bahasa yang mempertahankan mode.
-- [ ] T033 [P] [US2] Tulis `e2e/docs.a11y.spec.ts`: axe di kedua locale × light/dark untuk halaman dokumentasi dan pratinjau.
+- [x] T032 [P] [US2] Tulis `e2e/docs.locales.spec.ts`: tujuh bagian di `/docs/components/button` dan `/id/docs/components/button`, `lang`, `hreflang`, pengalih bahasa yang mempertahankan mode.
+- [x] T033 [P] [US2] Tulis `e2e/docs.a11y.spec.ts`: axe di kedua locale × light/dark untuk halaman dokumentasi dan pratinjau.
 
 ### Implementation for User Story 2
 
-- [ ] T034 [US2] Implementasikan `apps/docs/i18n.ts`: locale `en`/`id`, label tujuh bagian, tombol pasang, pengalih mode/bahasa, dan helper route.
-- [ ] T035 [US2] Implementasikan `apps/docs/components/component-docs-page.tsx` beserta preview, props table, dependencies, a11y notes, language/mode switches, dan source viewer yang membaca `packages/ui/src/components/ui/button.tsx`. Rujuk `data-model.md` `DocsPage.sections`, `DocsPage.propsTable`, `DocsPage.dependencies`, `DocsPage.a11yNotes`.
-- [ ] T036 [US2] Implementasikan route group `apps/docs/app/(en)/layout.tsx`, `apps/docs/app/(id)/layout.tsx`, `apps/docs/app/(en)/docs/components/[slug]/page.tsx`, dan `apps/docs/app/(id)/id/docs/components/[slug]/page.tsx` dengan `<html lang>` per locale. Rujuk `data-model.md` `DocsPage.locales`.
-- [ ] T037 [P] [US2] Tulis prosa Inggris `apps/docs/content/components/button.en.md` (tujuh bagian).
-- [ ] T038 [P] [US2] Tulis prosa Indonesia `apps/docs/content/components/button.id.md` (tujuh bagian).
-- [ ] T039 [P] [US2] Buat overlay terjemahan `apps/docs/content/components/button.props.id.json` untuk semua props publik.
-- [ ] T040 [P] [US2] Buat contoh `apps/docs/examples/button/*.tsx` (varian, ukuran, disabled, loading, ikon, asChild) yang dipakai kedua locale.
-- [ ] T041 [US2] Implementasikan `scripts/generate-docs.ts`: metadata `apps/docs/generated/metadata/button.json` (`ComponentMetadata.*`, `Prop.descriptions.en/id`, `DocsPage.locales`) dan halaman `.md` Inggris/Indonesia di `apps/docs/public/docs/components/button.md` dan `apps/docs/public/id/docs/components/button.md`.
-- [ ] T042 [US2] Implementasikan `scripts/check-docs-parity.ts`: tujuh bagian di kedua locale, deskripsi props en/id lengkap, route/URL `.md` konsisten, dan schema metadata valid.
-- [ ] T043 [US2] Hubungkan `DocsPage.languageSwitch`, `DocsPage.modeCoverage`, dan `<link rel="alternate" hreflang>` di `apps/docs/components/component-docs-page.tsx` serta layout `apps/docs/app/(en)/layout.tsx` dan `apps/docs/app/(id)/layout.tsx`, termasuk mempertahankan mode saat berpindah bahasa.
-- [ ] T044 [US2] Jalankan `pnpm check:docs-parity`, `pnpm check:freshness`, dan docs e2e; perbaiki `apps/docs/public/docs/components/button.md`, `apps/docs/public/id/docs/components/button.md`, dan `apps/docs/generated/metadata/button.json` sampai kedua halaman lolos.
+- [x] T034 [US2] Implementasikan `apps/docs/i18n.ts`: locale `en`/`id`, label tujuh bagian, tombol pasang, pengalih mode/bahasa, dan helper route.
+- [x] T035 [US2] Implementasikan `apps/docs/components/component-docs-page.tsx` beserta preview, props table, dependencies, a11y notes, language/mode switches, dan source viewer yang membaca `packages/ui/src/components/ui/button.tsx`. Rujuk `data-model.md` `DocsPage.sections`, `DocsPage.propsTable`, `DocsPage.dependencies`, `DocsPage.a11yNotes`.
+- [x] T036 [US2] Implementasikan route group `apps/docs/app/(en)/layout.tsx`, `apps/docs/app/(id)/layout.tsx`, `apps/docs/app/(en)/docs/components/[slug]/page.tsx`, dan `apps/docs/app/(id)/id/docs/components/[slug]/page.tsx` dengan `<html lang>` per locale. Rujuk `data-model.md` `DocsPage.locales`.
+- [x] T037 [P] [US2] Tulis prosa Inggris `apps/docs/content/components/button.en.md` (tujuh bagian).
+- [x] T038 [P] [US2] Tulis prosa Indonesia `apps/docs/content/components/button.id.md` (tujuh bagian).
+- [x] T039 [P] [US2] Buat overlay terjemahan `apps/docs/content/components/button.props.id.json` untuk semua props publik.
+- [x] T040 [P] [US2] Buat contoh `apps/docs/examples/button/*.tsx` (varian, ukuran, disabled, loading, ikon, asChild) yang dipakai kedua locale.
+- [x] T041 [US2] Implementasikan `scripts/generate-docs.ts`: metadata `apps/docs/generated/metadata/button.json` (`ComponentMetadata.*`, `Prop.descriptions.en/id`, `DocsPage.locales`) dan halaman `.md` Inggris/Indonesia di `apps/docs/public/docs/components/button.md` dan `apps/docs/public/id/docs/components/button.md`.
+- [x] T042 [US2] Implementasikan `scripts/check-docs-parity.ts`: tujuh bagian di kedua locale, deskripsi props en/id lengkap, route/URL `.md` konsisten, dan schema metadata valid.
+- [x] T043 [US2] Hubungkan `DocsPage.languageSwitch`, `DocsPage.modeCoverage`, dan `<link rel="alternate" hreflang>` di `apps/docs/components/component-docs-page.tsx` serta layout `apps/docs/app/(en)/layout.tsx` dan `apps/docs/app/(id)/layout.tsx`, termasuk mempertahankan mode saat berpindah bahasa.
+- [x] T044 [US2] Jalankan `pnpm check:docs-parity`, `pnpm check:freshness`, dan docs e2e; perbaiki `apps/docs/public/docs/components/button.md`, `apps/docs/public/id/docs/components/button.md`, dan `apps/docs/generated/metadata/button.json` sampai kedua halaman lolos.
 
 **Checkpoint**: US2 selesai; dokumentasi dua bahasa lengkap dan dapat dipakai konsumen.
 
@@ -122,13 +122,13 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 ### Tests for User Story 3
 
-- [ ] T045 [P] [US3] Tulis `evals/ai-baseline/tasks.md` berisi tiga tugas baku, rubrik biner (selesai tanpa pertanyaan + sesuai dokumentasi), dan format hasil di `evals/ai-baseline/results/`.
-- [ ] T046 [P] [US3] Tulis `e2e/docs.llms.spec.ts`: semua tautan `/llms.txt` dapat diakses, mencakup kedua bahasa, dan metadata props/dependensi cocok dengan ekspor komponen.
+- [x] T045 [P] [US3] Tulis `evals/ai-baseline/tasks.md` berisi tiga tugas baku, rubrik biner (selesai tanpa pertanyaan + sesuai dokumentasi), dan format hasil di `evals/ai-baseline/results/`.
+- [x] T046 [P] [US3] Tulis `e2e/docs.llms.spec.ts`: semua tautan `/llms.txt` dapat diakses, mencakup kedua bahasa, dan metadata props/dependensi cocok dengan ekspor komponen.
 
 ### Implementation for User Story 3
 
-- [ ] T047 [US3] Tulis `AGENTS.md` di root: perintah build/check/test, struktur repo, aturan token, cara menambah komponen, dan tautan ke plan/spec.
-- [ ] T048 [US3] Implementasikan generator `llms.txt` di `scripts/generate-docs.ts` dan route `apps/docs/app/(en)/llms.txt/route.ts` dengan bagian `## Components (English)` dan `## Komponen (Bahasa Indonesia)`; rujuk `data-model.md` §7.
+- [x] T047 [US3] Tulis `AGENTS.md` di root: perintah build/check/test, struktur repo, aturan token, cara menambah komponen, dan tautan ke plan/spec.
+- [x] T048 [US3] Implementasikan generator `llms.txt` di `scripts/generate-docs.ts` dan route `apps/docs/app/(en)/llms.txt/route.ts` dengan bagian `## Components (English)` dan `## Komponen (Bahasa Indonesia)`; rujuk `data-model.md` §7.
 - [ ] T049 [US3] Jalankan tiga tugas AI baseline dengan agen tanpa konteks repo, simpan transkrip/skor di `evals/ai-baseline/results/`, dan perbaiki `llms.txt`/`apps/docs/content/components/button.en.md`/`button.id.md` bila lulus < 2/3.
 
 **Checkpoint**: US3 selesai; agen dapat memakai Button dari indeks dan metadata.
@@ -137,8 +137,8 @@ Monorepo pnpm: `packages/ui/`, `apps/docs/`, `scripts/`, `e2e/`, `fixtures/` di 
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T050 [P] Tambahkan Changesets (`.changeset/config.json`), `CHANGELOG.md` awal, dan catatan breaking-change untuk permukaan publik (FR-014).
-- [ ] T051 [P] Finalisasi `.github/workflows/ci.yml`: cache pnpm, jalankan `pnpm build && pnpm check && pnpm test && pnpm test:e2e`, unggah log/artifact kegagalan.
+- [x] T050 [P] Tambahkan Changesets (`.changeset/config.json`), `CHANGELOG.md` awal, dan catatan breaking-change untuk permukaan publik (FR-014).
+- [x] T051 [P] Finalisasi `.github/workflows/ci.yml`: cache pnpm, jalankan `pnpm build && pnpm check && pnpm test && pnpm test:e2e`, unggah log/artifact kegagalan.
 - [ ] T052 Jalankan validasi `quickstart.md` dari nol (paket dan salinan) termasuk uji pemakaian 5 peserta, lalu catat bukti di `specs/001-fondasi-button/validation.md`.
 - [ ] T053 Verifikasi performance goals: budget gzip `packages/ui/dist/components/ui/button.js` (T025) dan first-load JS kedua halaman dokumentasi dari keluaran `apps/docs/.next/`.
 - [ ] T054 Lakukan sweep akhir di `packages/ui/`, `apps/docs/`, dan `scripts/`: `pnpm build`, `pnpm check`, `pnpm test`, `pnpm test:e2e`, jalankan checklist manual `packages/ui/src/components/ui/button.a11y.md` untuk kedua locale, validasi `contracts/component-metadata.schema.json`, nol tautan rusak, dan tidak ada artefak generate yang kotor.
