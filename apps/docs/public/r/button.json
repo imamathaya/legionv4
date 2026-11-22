@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "title": "Button",
+  "description": "A token-driven action control with five variants, three sizes, and six states.",
+  "dependencies": [
+    "@radix-ui/react-slot",
+    "class-variance-authority",
+    "clsx",
+    "lucide-react",
+    "tailwind-merge"
+  ],
+  "registryDependencies": [
+    "http://localhost:3000/r/theme.json",
+    "http://localhost:3000/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "packages/ui/src/components/ui/button.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Slot, Slottable } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { Loader2 } from \"lucide-react\";\nimport { cn } from \"../../lib/utils\";\n\nexport const buttonVariants = cva(\n  \"inline-flex min-w-0 items-center justify-center gap-2 rounded-md text-center font-medium break-words whitespace-normal transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80\",\n        secondary: \"bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70\",\n        destructive: \"bg-destructive text-destructive-foreground hover:shadow-sm active:shadow-none\",\n        outline:\n          \"border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80\",\n        ghost: \"bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80\",\n      },\n      size: {\n        sm: \"min-h-8 gap-1.5 px-3 py-1.5 text-sm\",\n        default: \"min-h-9 px-4 py-2 text-sm\",\n        lg: \"min-h-10 px-6 py-2.5 text-base\",\n      },\n    },\n    defaultVariants: {\n      variant: \"default\",\n      size: \"default\",\n    },\n  },\n);\n\nexport type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>[\"variant\"]>;\nexport type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>[\"size\"]>;\n\nexport interface ButtonProps\n  extends React.ButtonHTMLAttributes<HTMLButtonElement>,\n    VariantProps<typeof buttonVariants> {\n  /** Visual style of the button. */\n  variant?: ButtonVariant;\n  /** Control size. */\n  size?: ButtonSize;\n  /** Extra classes merged after the variant classes. */\n  className?: string;\n  /** Renders the child element instead of a button while keeping button styles and accessibility attributes. */\n  asChild?: boolean;\n  /** Disables activation and announces a busy state to assistive technology. */\n  loading?: boolean;\n  /** Screen-reader status text used while loading is true. */\n  loadingLabel?: string;\n}\n\nfunction containsReadableText(node: React.ReactNode): boolean {\n  if (typeof node === \"string\" || typeof node === \"number\") {\n    return String(node).trim().length > 0;\n  }\n  if (Array.isArray(node)) {\n    return node.some(containsReadableText);\n  }\n  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {\n    return containsReadableText(node.props.children);\n  }\n  return false;\n}\n\nexport const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(\n  {\n    variant,\n    size,\n    asChild = false,\n    loading = false,\n    loadingLabel = \"Loading\",\n    className,\n    children,\n    onClick,\n    disabled,\n    tabIndex,\n    ...props\n  },\n  ref,\n) {\n  const isDisabled = Boolean(disabled || loading);\n  const Component = asChild ? Slot : \"button\";\n\n  if (\n    process.env.NODE_ENV !== \"production\" &&\n    !containsReadableText(children) &&\n    !props[\"aria-label\"] &&\n    !props[\"aria-labelledby\"]\n  ) {\n    console.warn(\"Legion Button: provide aria-label or aria-labelledby for icon-only buttons.\");\n  }\n\n  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {\n    if (loading) {\n      event.preventDefault();\n      return;\n    }\n    onClick?.(event);\n  };\n\n  return (\n    <Component\n      ref={ref}\n      data-slot=\"button\"\n      data-variant={variant ?? \"default\"}\n      data-size={size ?? \"default\"}\n      aria-busy={loading ? true : undefined}\n      aria-disabled={asChild && isDisabled ? true : undefined}\n      disabled={asChild ? undefined : isDisabled}\n      tabIndex={asChild && isDisabled ? -1 : tabIndex}\n      className={cn(buttonVariants({ variant, size }), className)}\n      onClick={handleClick}\n      {...props}\n    >\n      {loading ? <Loader2 aria-hidden=\"true\" className=\"size-4 animate-spin motion-reduce:animate-none\" /> : null}\n      {loading ? (\n        <span role=\"status\" className=\"sr-only\">\n          {loadingLabel}\n        </span>\n      ) : null}\n      {asChild ? <Slottable>{children}</Slottable> : children}\n    </Component>\n  );\n});\n\nButton.displayName = \"Button\";\n",
+      "type": "registry:ui",
+      "target": "@ui/button.tsx"
+    },
+    {
+      "path": "packages/ui/registry/button.legion.json",
+      "content": "{\n  \"item\": \"button\",\n  \"version\": \"0.1.0\",\n  \"source\": \"http://localhost:3000/r/button.json\",\n  \"documentation\": {\n    \"en\": \"http://localhost:3000/docs/components/button\",\n    \"id\": \"http://localhost:3000/id/docs/components/button\"\n  }\n}\n",
+      "type": "registry:file",
+      "target": "@ui/button.legion.json"
+    }
+  ],
+  "meta": {
+    "legion": {
+      "version": "0.1.0",
+      "source": "http://localhost:3000/r/button.json",
+      "docs": {
+        "en": "http://localhost:3000/docs/components/button",
+        "id": "http://localhost:3000/id/docs/components/button"
+      }
+    }
+  },
+  "type": "registry:ui"
+}

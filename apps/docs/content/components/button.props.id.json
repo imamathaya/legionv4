@@ -1,0 +1,8 @@
+{
+  "variant": "Gaya visual tombol.",
+  "size": "Ukuran kontrol.",
+  "className": "Kelas tambahan yang digabungkan setelah kelas varian.",
+  "asChild": "Merender elemen anak alih-alih elemen button sambil mempertahankan gaya dan atribut aksesibilitas.",
+  "loading": "Menonaktifkan aktivasi dan mengumumkan status sibuk ke teknologi bantu.",
+  "loadingLabel": "Teks status untuk pembaca layar selama loading bernilai true."
+}

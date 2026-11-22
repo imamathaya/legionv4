@@ -1,0 +1,48 @@
+{
+  "name": "legionv4",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "scripts": {
+    "build": "pnpm --filter @legionv4/ui build && pnpm generate:docs && pnpm build:registry && pnpm --filter @legionv4/docs build",
+    "docs:dev": "pnpm generate:docs && pnpm build:registry && pnpm --filter @legionv4/docs dev",
+    "generate:docs": "node scripts/generate-docs.ts",
+    "build:registry": "node scripts/build-registry.ts",
+    "check": "pnpm check:tokens && pnpm check:token-literals && pnpm check:contrast && pnpm check:docs-parity && pnpm check:freshness && pnpm check:registry && pnpm check:size",
+    "check:tokens": "node scripts/check-tokens.ts",
+    "check:token-literals": "node scripts/check-token-literals.ts",
+    "check:contrast": "node scripts/check-contrast.ts",
+    "check:freshness": "pnpm generate:docs && pnpm build:registry && git diff --exit-code -- apps/docs/generated apps/docs/public llms.txt",
+    "check:docs-parity": "node scripts/check-docs-parity.ts",
+    "check:registry": "node scripts/check-registry.ts",
+    "check:size": "node scripts/check-size.ts",
+    "test": "vitest run",
+    "pretest": "node scripts/build-registry.ts && node scripts/prepare-parity.ts",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "pretest:e2e": "node scripts/build-registry.ts && node scripts/prepare-copy-fixture.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@changesets/cli": "^3.0.3",
+    "@playwright/test": "1.65.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.1",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "ajv": "8.20.0",
+    "colorjs.io": "0.7.1",
+    "jsdom": "31.0.1",
+    "postcss": "8.5.33",
+    "react-docgen-typescript": "2.4.0",
+    "shadcn": "4.23.0",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

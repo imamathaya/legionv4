@@ -97,6 +97,7 @@ specs/001-fondasi-button/
 ├── research.md          # Keputusan teknis (Phase 0)
 ├── data-model.md        # Bentuk token, komponen, registry, dokumentasi (Phase 1)
 ├── quickstart.md        # Langkah validasi (Phase 1)
+├── validation.md        # Bukti implementasi dan batas Converge
 ├── contracts/
 │   ├── button-api.md                 # Kontrak API Button
 │   └── component-metadata.schema.json # Skema metadata komponen
@@ -254,7 +255,7 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 | SC-007 | `evals/ai-baseline/tasks.md` dijalankan pada agen tanpa konteks repo | ≥ 2/3 tugas selesai tanpa pertanyaan, sesuai dokumentasi |
 | SC-008 | e2e zoom 200% dan viewport 320 px | Semua fungsi Button tercapai; tidak ada teks terpotong |
 
-## Phased Delivery (bahan untuk tasks.md, belum dibuat)
+## Phased Delivery
 
 1. **Fondasi repo dan token** — workspace pnpm, `theme.css`, `check:tokens`, `check:token-literals`, `check:contrast`.
 2. **Button dan test** — komponen, JSDoc, `button.a11y.md`, unit test, build paket, budget ukuran.
@@ -285,4 +286,4 @@ Tidak ada penyimpangan dari constitution. Kolom berikut sengaja kosong.
 
 ## Gate
 
-Plan selesai dan disetujui; `tasks.md` sudah dibuat untuk tahap implementasi. Implementasi belum dijalankan dan menunggu keputusan berikutnya.
+Plan dan `tasks.md` selesai. Implementasi sudah dijalankan; build, check, unit, dan e2e hijau. Tahap Converge/QA (checklist manual, uji pemakaian, baseline AI, pengukuran first-load) masih terbuka dan belum diklaim `Converged`.
