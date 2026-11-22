@@ -23,3 +23,5 @@ fixtures/copy-consumer/AGENTS.md
 chrome-cache/
 
 packages/ui/test/generated/
+
+artifacts/

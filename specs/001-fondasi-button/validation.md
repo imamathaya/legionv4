@@ -9,7 +9,7 @@
 | Command | Result |
 | --- | --- |
 | `pnpm build` | Passed: UI `tsc` emit, docs generation, registry build, Next.js production build for both locales |
-| `pnpm check` | Passed: 19 semantic colours + radius, token literals, 48 contrast checks, docs parity, freshness, registry identity, size (1550 B gzip ≤ 4096 B) |
+| `pnpm check` | Passed: 19 semantic colours + radius, token literals, 48 contrast checks, docs parity, freshness, registry identity, size (1556 B gzip ≤ 4096 B) |
 | `pnpm test` | Passed: 3 files, 46 tests (matrix, states, keyboard, loading, asChild, refs, copy-vs-package markup parity, sidecar version) |
 | `pnpm test:e2e` | Passed: 20 Playwright tests — axe light/dark (preview and both docs pages), 320 px target size, 200% zoom, focus outline, reduced motion, loading status, theme token change, copy-vs-package markup/computed parity, locale switching with theme preservation, `llms.txt`, registry metadata |
 | Copy consumer | `fixtures/copy-consumer` renders the registry contents on port 3001; package and copy markup and computed styles match |
