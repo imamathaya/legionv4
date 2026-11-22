@@ -135,8 +135,8 @@ The API identifiers below stay English in both documentation locales; prose and 
 <Button variant="outline" asChild>
   <a href="/docs">Read docs</a>
 </Button>
-<Button size="default" className="size-9" aria-label="Search">
-  <SearchIcon aria-hidden="true" />
+<Button className="size-9 px-0" aria-label="Search">
+  <SearchIcon aria-hidden="true" className="size-4 shrink-0" />
 </Button>
 ```
 

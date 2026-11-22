@@ -48,8 +48,8 @@ export function ButtonShowcase({ locale }: { locale: Locale }) {
           <Button variant="outline" asChild>
             <a href={locale === "id" ? "/id/docs/components/button" : "/docs/components/button"}>Link</a>
           </Button>
-          <Button className="size-9" aria-label="Search">
-            <Search aria-hidden="true" />
+          <Button className="size-9 px-0" aria-label="Search">
+            <Search aria-hidden="true" className="size-4 shrink-0" />
           </Button>
         </div>
       </div>
