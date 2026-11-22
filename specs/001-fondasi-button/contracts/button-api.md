@@ -2,13 +2,13 @@
 
 **Version**: 1.0.0 (feature `001-fondasi-button`)
 **Status**: Normative for implementation and tests
-**Consumer docs language**: English
+**Consumer docs language**: English and Bahasa Indonesia (API identifiers remain English)
 
 Normative keywords: **MUST**, **MUST NOT**, **SHOULD**, **MAY**.
 
 ## 1. Public exports
 
-From `@legion/ui` (package) and `@ui/button` (copy item):
+From `@legionv4/ui` (package) and `@ui/button` (copy item):
 
 ```ts
 export { Button, buttonVariants } from "./components/ui/button";
@@ -27,7 +27,7 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from "./components/ui/but
 | `size` | `"sm" \| "default" \| "lg"` | `"default"` | No | Control size. |
 | `asChild` | `boolean` | `false` | No | Renders the child element instead of `<button>`, keeping styles and accessibility attributes. |
 | `loading` | `boolean` | `false` | No | Disables activation and announces a busy state. |
-| `loadingLabel` | `string` | `"Loading"` | No | Screen-reader status text used while `loading` is true. |
+| `loadingLabel` | `string` | `"Loading"` | No | Screen-reader status text used while `loading` is true. Localized usage passes the locale's text, e.g. `loadingLabel="Memuat"`. |
 | `className` | `string` | `undefined` | No | Extra classes merged after variant classes with `cn()`. |
 
 All other native button attributes (`type`, `disabled`, `onClick`, `aria-*`, `data-*`, `form`, etc.) MUST pass through unchanged.
@@ -126,6 +126,8 @@ Manual evidence is recorded in `packages/ui/src/components/ui/button.a11y.md`.
 
 ## 8. Examples (normative shape)
 
+The API identifiers below stay English in both documentation locales; prose and accessible status text may be localized.
+
 ```tsx
 <Button>Save</Button>
 <Button variant="secondary" size="sm">Cancel</Button>
@@ -138,8 +140,10 @@ Manual evidence is recorded in `packages/ui/src/components/ui/button.a11y.md`.
 </Button>
 ```
 
+Indonesian documentation shows an inline localized variant, e.g. `<Button loading loadingLabel="Memuat">Simpan</Button>`. The shared example files remain the single runnable source for both locales; only prose/snippets are localized.
+
 ## 9. Compatibility and versioning
 
-- Public surface: the named exports, prop names/types, `data-slot`, `data-variant`, `data-size`, and the registry item name `button`.
+- Public surface: the package name `@legionv4/ui`, named exports, prop names/types, `data-slot`, `data-variant`, `data-size`, and the registry item name `button`.
 - Removing or renaming any of these, or changing defaults, is a **breaking change**: it MUST be recorded in `CHANGELOG.md` and released as a major version (Constitution Principle IX; FR-014).
 - The copy item MUST record its source version in `button.legion.json` (FR-015).

@@ -40,8 +40,8 @@
 
 ## Temuan untuk Peninjau
 
-- Nama paket masih sementara; keputusan final ditunda sampai publikasi pertama (disengaja, tidak memblokir).
-- Bahasa dokumentasi diasumsikan Inggris; konfirmasi saat review.
+- Nama paket final `@legionv4/ui`; tetap privat sampai publikasi pertama.
+- Dokumentasi dua bahasa: Inggris dan Indonesia (dikonfirmasi 2026-11-22).
 - Ambang uji tugas AI (2 dari 3) adalah usulan awal dan boleh diperketat setelah percobaan pertama.
 
 ## Notes

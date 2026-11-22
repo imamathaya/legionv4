@@ -119,7 +119,7 @@
     "prop": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "type", "required", "description"],
+      "required": ["name", "type", "required", "descriptions"],
       "properties": {
         "name": {
           "type": "string",
@@ -135,12 +135,28 @@
         "defaultValue": {
           "type": ["string", "null"]
         },
-        "description": {
-          "type": "string",
-          "minLength": 1,
-          "description": "One-sentence JSDoc summary."
+        "descriptions": {
+          "$ref": "#/$defs/descriptions"
         }
       }
+    },
+    "descriptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "id"],
+      "properties": {
+        "en": {
+          "$ref": "#/$defs/sentence"
+        },
+        "id": {
+          "$ref": "#/$defs/sentence"
+        }
+      }
+    },
+    "sentence": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-sentence description."
     },
     "example": {
       "type": "object",
@@ -196,23 +212,49 @@
     "docs": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["route", "markdownUrl", "prosePath", "sourcePath"],
+      "required": ["defaultLocale", "sourcePath", "locales"],
       "properties": {
-        "route": {
-          "type": "string",
-          "pattern": "^/docs/components/[a-z0-9-]+$"
-        },
-        "markdownUrl": {
-          "type": "string",
-          "pattern": "^/docs/components/[a-z0-9-]+\\.md$"
-        },
-        "prosePath": {
-          "type": "string",
-          "pattern": "\\.md$"
+        "defaultLocale": {
+          "const": "en"
         },
         "sourcePath": {
           "type": "string",
           "pattern": "\\.tsx$"
+        },
+        "locales": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["en", "id"],
+          "properties": {
+            "en": {
+              "$ref": "#/$defs/localeDocs"
+            },
+            "id": {
+              "$ref": "#/$defs/localeDocs"
+            }
+          }
+        }
+      }
+    },
+    "localeDocs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route", "markdownUrl", "prosePath", "htmlLang"],
+      "properties": {
+        "route": {
+          "type": "string",
+          "pattern": "^(?:/id)?/docs/components/[a-z0-9-]+$"
+        },
+        "markdownUrl": {
+          "type": "string",
+          "pattern": "^(?:/id)?/docs/components/[a-z0-9-]+\\.md$"
+        },
+        "prosePath": {
+          "type": "string",
+          "pattern": "\\.(?:en|id)\\.md$"
+        },
+        "htmlLang": {
+          "enum": ["en", "id"]
         }
       }
     }

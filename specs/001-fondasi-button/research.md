@@ -6,7 +6,7 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 
 ## R1. Kerangka dokumentasi
 
-**Decision**: Next.js 16.4.6 (App Router, React Server Components) + MDX (`@next/mdx`) + Tailwind CSS 4.3.5, `next-themes` 0.4.6 untuk mode, dan Shiki untuk penyorotan kode di server.
+**Decision**: Next.js 16.4.6 (App Router, React Server Components) + MDX (`@next/mdx`) + Tailwind CSS 4.3.5, `next-themes` 0.4.6 untuk mode, dan Shiki untuk penyorotan kode di server. Dua locale (`en`, `id`) memakai route group dengan root layout masing-masing agar `<html lang>` benar tanpa middleware; label UI berasal dari kamus bertipe lokal, bukan library i18n.
 
 **Rationale**:
 - Komponen adalah React; pratinjau harus merender komponen asli tanpa jembatan island atau wrapper framework lain.
@@ -14,10 +14,11 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 - App Router memungkinkan halaman komponen membaca file sumber dan metadata hasil generate saat build (tanpa fetch runtime), memenuhi Performance Goals.
 - `next-themes` menulis kelas `.dark` di `<html>` sebelum paint, menutup edge case kilatan warna salah tanpa mekanisme mode kedua.
 - Shiki berjalan di server component; tidak ada JavaScript klien tambahan untuk penyorotan.
+- Route group per locale memberi `/docs/...` dan `/id/docs/...` dengan atribut bahasa yang benar (WCAG 3.1.1) dan tanpa dependensi i18n tambahan.
 
 **Alternatives considered**:
 - **Astro + Starlight**: kualitas dokumentasi baik dan JS awal kecil, tetapi pratinjau React memerlukan island + integrasi tambahan, dan registry static output tetap perlu pipeline terpisah. Dua model build untuk satu komponen dianggap lebih rumit.
-- **Fumadocs**: memberi search, TOC, dan konversi LLM siap pakai, tetapi menambah lapisan abstraksi besar untuk satu halaman dokumentasi dan menduplikasi generator `llms.txt`/`.md` yang menjadi kebutuhan constitution.
+- **Fumadocs**: memberi search, TOC, dan konversi LLM siap pakai, tetapi menambah lapisan abstraksi besar untuk satu komponen dua bahasa dan menduplikasi generator `llms.txt`/`.md` yang menjadi kebutuhan constitution.
 - **VitePress**: tidak mendukung pratinjau komponen React secara native.
 - **Docusaurus**: berat, konfigurasi MDX/React lebih berlapis daripada kebutuhan.
 
@@ -67,7 +68,7 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 
 ## R5. Alat pemeriksaan aksesibilitas
 
-**Decision**: `@axe-core/playwright` 4.14.0 pada halaman dokumentasi (light dan dark) + daftar periksa manual per komponen di `packages/ui/src/components/ui/button.a11y.md`.
+**Decision**: `@axe-core/playwright` 4.14.0 pada halaman dokumentasi (light dan dark, locale `en` dan `id`) + daftar periksa manual per komponen di `packages/ui/src/components/ui/button.a11y.md`.
 
 **Rationale**:
 - axe di browser nyata menangkap pelanggaran struktur (nama, peran, kontras elemen nyata) yang tidak terlihat di jsdom.
@@ -86,7 +87,7 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 **Rationale**:
 - Registry mengikuti spesifikasi shadcn: `shadcn add <url>` adalah jalur salin yang sudah dikenal dan tidak memerlukan CLI sendiri.
 - `meta` adalah field resmi item registry, sehingga versi dapat disematkan tanpa field di luar skema ([registry-item.json](https://ui.shadcn.com/docs/registry/registry-item-json)).
-- Sidecar `registry:file` dengan target `@ui/button.legion.json` membuat salinan mencatat versi asal secara persisten (FR-015) tanpa menyisipkan komentar versi ke kode komponen (yang akan merusak identitas sumber).
+- Sidecar `registry:file` dengan target `@ui/button.legion.json` membuat salinan mencatat versi asal dan URL dokumentasi `en`/`id` secara persisten (FR-015) tanpa menyisipkan komentar versi ke kode komponen (yang akan merusak identitas sumber).
 - `shadcn build` melakukan embedding isi file dan validasi awal; post-stempel hanya menambah metadata dan satu entri file, lalu divalidasi ulang dengan schema resmi.
 - Item `theme` dan `utils` menjadi `registryDependencies` agar salinan Button tetap berfungsi tanpa tema yang sudah ada.
 - Base URL berada di `registry.config.json` supaya build deterministik (tidak bergantung env CI) dan mudah diganti saat deployment.
@@ -114,11 +115,12 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 
 ## R8. Sumber tunggal token dan dokumentasi
 
-**Decision**: `theme.css` adalah satu-satunya sumber token. Prosa komponen berupa Markdown (`apps/docs/content/components/button.md`), contoh berupa file TSX yang dirender dan dibaca ulang sebagai teks, dan metadata dibangkitkan oleh `react-docgen-typescript` + manifest registry.
+**Decision**: `theme.css` adalah satu-satunya sumber token. Prosa komponen berupa Markdown per bahasa (`apps/docs/content/components/button.en.md`, `button.id.md`), deskripsi props diterjemahkan lewat overlay `button.props.id.json`, contoh berupa file TSX yang dirender dan dibaca ulang sebagai teks, dan metadata dibangkitkan oleh `react-docgen-typescript` + manifest registry.
 
 **Rationale**:
 - Token tidak diduplikasi ke TypeScript atau JSON; checker membaca CSS.
 - Prosa Markdown bebas JSX sehingga dapat dipublikasikan apa adanya sebagai halaman `.md` untuk agen AI, sementara halaman HTML menyisipkan pratinjau dan tabel hasil generate.
+- Satu file prosa per bahasa menjaga kualitas terjemahan; overlay props memisahkan teks API (Inggris) dari terjemahan tanpa menduplikasi kode.
 - Contoh kode yang ditampilkan berasal dari file yang benar-benar dirender, menutup risiko contoh basi.
 - `react-docgen-typescript` mengekstrak props dan JSDoc dari tipe, sesuai Prinsip III dan FR-009.
 
@@ -166,9 +168,33 @@ Keputusan di bawah dipilih agar memenuhi constitution tanpa penyimpangan. Setiap
 - **Memisahkan setiap check ke job paralel**: lebih cepat tetapi overhead setup pnpm/browser lebih besar untuk repo kecil.
 - **Menjalankan e2e hanya nightly**: melanggar gate merge Prinsip VI.
 
-## Open decisions (tidak memblokir plan)
+## R12. Dokumentasi dua bahasa
 
-- **Nama paket final**: tetap `@legion/ui` (privat) sampai publikasi pertama.
-- **Bahasa dokumentasi**: Inggris untuk halaman komponen; dapat dikoreksi saat review plan.
+**Decision**: Inggris (`en`, default) dan Indonesia (`id`) sebagai dua locale statis. Inggris di `/docs/components/button`, Indonesia di `/id/docs/components/button`. Setiap locale punya root layout sendiri lewat route group `(en)` dan `(id)`, sehingga `<html lang="en|id">` benar tanpa middleware. Label UI berasal dari kamus bertipe di `apps/docs/i18n.ts`; prosa dari file Markdown per bahasa; deskripsi props dari JSDoc Inggris + overlay terjemahan Indonesia. `llms.txt` tunggal memuat entri kedua bahasa, dan setiap halaman `.md` dibangkitkan per locale.
+
+**Rationale**:
+- Memenuhi permintaan produk (dua bahasa) sekaligus WCAG 3.1.1 Language of Page.
+- Route group + root layout menghindari middleware, redirect, dan penentuan bahasa berbasis cookie yang menyulitkan pratinjau statis.
+- Kamus bertipe kecil (tujuh judul bagian, tombol pasang, pengalih mode/bahasa) jauh lebih sederhana daripada runtime i18n untuk satu halaman komponen; tidak ada dependensi baru.
+- Prosa panjang tetap ditulis manusia per bahasa, bukan dihasilkan mesin saat build, sehingga kualitas dan determinisme terjaga.
+- Overlay props memisahkan identifier API (Inggris) dari terjemahan dan membuat penerjemahan terukur: generate gagal bila ada prop tanpa deskripsi `id`.
+- Satu `llms.txt` menjaga Prinsip III (satu indeks) sambil menautkan kedua bahasa; agen memilih bahasa yang tersedia.
+
+**Alternatives considered**:
+- **next-intl/i18next**: memberi pluralisasi, format, dan routing otomatis, tetapi menambah runtime, konfigurasi middleware, dan bundle untuk kebutuhan statis dua locale.
+- **Satu file prosa dengan blok `<!-- en -->`/`<!-- id -->`**: sulit ditinjau dan rawan tercampur.
+- **Terjemahan otomatis saat build**: non-deterministik, kualitas tidak terkontrol, dan melanggar prinsip “dibangkitkan dari sumber yang ditinjau”.
+- **Dua aplikasi dokumentasi terpisah**: menduplikasi shell, tema, dan pemeriksaan kesegaran; melanggar Prinsip IV secara praktis.
+- **Menerjemahkan identifier API/kode**: menyulitkan agen dan pengguna library; identifier tetap Inggris.
+
+## Catatan keputusan
+
+Ditetapkan pada review plan:
+
+- **Nama paket final**: `@legionv4/ui`, privat sampai publikasi pertama.
+- **Bahasa dokumentasi**: Inggris dan Indonesia.
+
+Masih terbuka (tidak memblokir plan):
+
 - **Threshold uji tugas AI** (2 dari 3) adalah usulan spec; dievaluasi setelah percobaan pertama.
 - **Hosting dokumentasi/registry**: belum ditentukan; base URL registry dikonfigurasi di `registry.config.json`.
