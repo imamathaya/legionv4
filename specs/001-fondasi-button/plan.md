@@ -6,7 +6,7 @@
 
 ## Summary
 
-Membangun fondasi Legion v4 sebagai monorepo pnpm: paket komponen React 19 + TypeScript ketat dengan token semantic tiga lapis (primitive → semantic → Tailwind `@theme inline`), satu komponen referensi Button (5 varian × 3 ukuran × 6 state), situs dokumentasi Next.js yang menyajikan tujuh bagian wajib, registry kompatibel shadcn yang menghasilkan paket dan item salin dari sumber yang sama, serta pemeriksaan otomatis (literal warna, kelengkapan token, kontras, kesegaran dokumen, aksesibilitas) yang menjadi gate CI.
+Membangun fondasi Legion v4 sebagai monorepo pnpm: paket komponen React 19 + TypeScript ketat dengan token semantic tiga lapis (primitive → semantic → Tailwind `@theme inline`), satu komponen referensi Button (5 varian × 3 ukuran × 6 state), situs dokumentasi Next.js yang menyajikan tujuh bagian wajib dalam dua bahasa (Inggris dan Indonesia), registry kompatibel shadcn yang menghasilkan paket dan item salin dari sumber yang sama, serta pemeriksaan otomatis (literal warna, kelengkapan token, kontras, kesegaran dokumen, aksesibilitas) yang menjadi gate CI.
 
 Pendekatan teknis: token ditulis sekali di `packages/ui/src/styles/theme.css`; Button memakai CVA sebagai satu-satunya pola varian; dokumentasi dan metadata dibangkitkan dari kode + dokumen Markdown; registry dibangun dengan `shadcn build` lalu distempel versi; seluruh pemeriksaan dijalankan lewat skrip Node di root repo.
 
@@ -17,13 +17,13 @@ Pendekatan teknis: token ditulis sekali di `packages/ui/src/styles/theme.css`; B
 **Primary Dependencies**:
 - Runtime paket: `react` 19.3.1 (peer), `react-dom` 19.3.1 (peer), `class-variance-authority` 0.7.1, `@radix-ui/react-slot` 1.5.0, `lucide-react` 1.77.0, `clsx` 2.1.1, `tailwind-merge` 3.7.1
 - Styling: `tailwindcss` 4.3.5 + `@tailwindcss/postcss`
-- Dokumentasi: `next` 16.4.6 (App Router), `@next/mdx` 16.4.6, `next-themes` 0.4.6, `shiki` (versi dikunci saat implementasi)
+- Dokumentasi: `next` 16.4.6 (App Router), `@next/mdx` 16.4.6, `next-themes` 0.4.6, `shiki` (versi dikunci saat implementasi), kamus locale internal di `apps/docs/i18n.ts` (tanpa library i18n)
 - Registry: `shadcn` 4.23.0 (`shadcn build`, `shadcn/schema`)
 - Pemeriksaan: `colorjs.io` 0.7.1 (kontras WCAG + parsing OKLCH), `postcss` 8.5.33 (parsing CSS), `react-docgen-typescript` 2.4.0 (props dari tipe + JSDoc), `ajv` 8.20.0 (validasi JSON Schema)
 
-**Storage**: Tidak ada basis data. Artefak statis: JSON registry, metadata komponen, `llms.txt`, halaman `.md` per komponen.
+**Storage**: Tidak ada basis data. Artefak statis: JSON registry, metadata komponen, `llms.txt`, halaman `.md` per komponen per bahasa.
 
-**Testing**: `vitest` 5.1.1 + `@testing-library/react` 16.3.3 + `@testing-library/user-event` + `jsdom` 31.0.1 untuk unit/komponen; `@playwright/test` 1.65.1 + `@axe-core/playwright` 4.14.0 untuk aksesibilitas, mode, keyboard, zoom, dan paritas salin vs paket.
+**Testing**: `vitest` 5.1.1 + `@testing-library/react` 16.3.3 + `@testing-library/user-event` + `jsdom` 31.0.1 untuk unit/komponen; `@playwright/test` 1.65.1 + `@axe-core/playwright` 4.14.0 untuk aksesibilitas, mode, keyboard, zoom, kedua locale, dan paritas salin vs paket.
 
 **Target Platform**: Web evergreen — Safari 16.4+, Chrome 111+, Firefox 128+ (batas Tailwind CSS 4). Tidak ada dukungan IE/legacy. Alat build dan CI di Linux dengan Node 24.
 
@@ -31,7 +31,7 @@ Pendekatan teknis: token ditulis sekali di `packages/ui/src/styles/theme.css`; B
 
 **Performance Goals**:
 - Modul Button hasil build ≤ 4 kB min+gzip, di luar React, Radix, dan CVA (diukur dengan `zlib.gzipSync` pada `dist/components/ui/button.js`).
-- First-load JS halaman `/docs/components/button` ≤ 150 kB gzip (dibaca dari keluaran `next build`).
+- First-load JS halaman `/docs/components/button` dan `/id/docs/components/button` ≤ 150 kB gzip (dibaca dari keluaran `next build`).
 - Tidak ada perhitungan warna atau CSS saat runtime; seluruh token adalah CSS statis.
 - Tidak ada request jaringan saat halaman dokumentasi dirender (semua data dibangkitkan saat build).
 
@@ -39,14 +39,14 @@ Pendekatan teknis: token ditulis sekali di `packages/ui/src/styles/theme.css`; B
 - WCAG 2.2 Level AA adalah batas bawah dan gate merge (kontras 4,5:1 teks; 3:1 batas kontrol dan fokus; target 24 × 24 px).
 - Nol literal warna dan nol nilai arbitrer di kode komponen (Prinsip I).
 - Setiap token semantic wajib punya nilai light dan dark (Prinsip II).
-- Paket tetap privat; nama final ditunda. Placeholder: `@legion/ui` dengan `"private": true`.
-- Dokumentasi komponen berbahasa Inggris; constitution, spec, plan, dan komentar proses berbahasa Indonesia.
+- Paket final: `@legionv4/ui`, tetap privat sampai publikasi pertama (`"private": true`).
+- Dokumentasi komponen tersedia dalam bahasa Inggris dan Indonesia; identifier API/kode tetap Inggris; constitution, spec, plan, dan komentar proses berbahasa Indonesia.
 - Tidak ada runtime CSS-in-JS, tidak ada dependensi baru tanpa alasan tertulis.
 - Mode gelap hanya diubah lewat satu mekanisme di level root (`next-themes` → kelas `.dark` pada `<html>`).
 
 **Scale/Scope**:
 - 19 token warna semantic (8 pasangan permukaan–teks + `border`, `input`, `ring`) + 1 radius dasar dengan 7 turunan.
-- 1 komponen (Button): 5 varian, 3 ukuran, 6 state, 1 halaman dokumentasi, 3 item registry (`theme`, `utils`, `button`).
+- 1 komponen (Button): 5 varian, 3 ukuran, 6 state, 2 halaman dokumentasi (Inggris dan Indonesia), 3 item registry (`theme`, `utils`, `button`).
 - Pilot 10 komponen; 9 komponen lain di fitur 002–004, di luar cakupan ini.
 
 ## Constitution Check
@@ -59,11 +59,11 @@ Pendekatan teknis: token ditulis sekali di `packages/ui/src/styles/theme.css`; B
 | --- | --- | --- |
 | **I. Semantic Tokens First (NON-NEGOTIABLE)** | LULUS | Token tiga lapis di `packages/ui/src/styles/theme.css`: primitive `--color-*` bergaya palet Tailwind, semantic 19 warna + radius, pemetaan `@theme inline`. Tidak ada token komponen. Larangan literal/arbitrer ditegakkan `check:token-literals` (AST TypeScript + parser CSS) dan `check:tokens` (kelengkapan, format `oklch()`/`rem`/`calc`). |
 | **II. Light dan Dark Setara** | LULUS | Setiap token warna dan radius dasar (`--radius`) punya nilai di `:root` dan `.dark`; `check:tokens` menggagalkan build bila salah satu mode tidak lengkap. Turunan `--radius-*` adalah formula mode-invariant di `@theme inline` yang mengikuti `--radius` tiap mode. Satu mekanisme: `@custom-variant dark (&:is(.dark *))`, kelas `.dark` di `<html>` lewat `next-themes`. Dokumentasi menyediakan pengalih mode. |
-| **III. Mudah Dibaca dan Dipakai AI** | LULUS | `AGENTS.md` di root; `llms.txt` dan halaman `.md` per komponen dibangkitkan; metadata mesin dari `react-docgen-typescript`; JSDoc wajib per prop; `check:freshness` (`generate && git diff --exit-code`) menjaga kesegaran. Uji tugas AI (SC-007) dijalankan pada tahap Converge dengan bahan `evals/ai-baseline/tasks.md`. |
+| **III. Mudah Dibaca dan Dipakai AI** | LULUS | `AGENTS.md` di root; `llms.txt` (indeks dua bahasa) dan halaman `.md` per komponen per bahasa dibangkitkan; metadata mesin dari `react-docgen-typescript`; JSDoc wajib per prop; `check:freshness` (`generate && git diff --exit-code`) menjaga kesegaran. Uji tugas AI (SC-007) dijalankan pada tahap Converge dengan bahan `evals/ai-baseline/tasks.md`. |
 | **IV. Satu Sumber Kode, Dua Cara Pakai** | LULUS | Komponen hidup hanya di `packages/ui/src/components/ui/button.tsx`; paket dibangun dari file itu, item registry menyematkan isi byte-identik dari file yang sama. `check:registry` membandingkan isi item registry dengan sumber; tidak ada salinan komponen kedua. |
 | **V. Komposisi, Bukan Konfigurasi** | LULUS | API: `variant`, `size`, `asChild`, `loading`, `loadingLabel`, `className`, atribut native. Tidak ada prop `xxxClassName`/`xxxStyle`. Kustomisasi lewat `className`, `asChild`, dan `data-slot="button"`. `loadingLabel` adalah prop konten aksesibilitas (bukan prop per bagian) dan dijustifikasi di kontrak. |
 | **VI. Aksesibel Secara Default, WCAG 2.2 AA (NON-NEGOTIABLE)** | LULUS | Fokus `focus-visible` dengan `outline-ring` + offset; target minimal 24 × 24 px; `aria-busy` + status teks untuk loading; nama aksesibel wajib untuk button ikon; gerakan menghormati `motion-reduce`; bukti otomatis (axe + `check:contrast`) dan manual (`button.a11y.md`). |
-| **VII. Dokumentasi Adalah Bagian dari Selesai** | LULUS | Halaman `/docs/components/button` memuat tujuh bagian wajib plus penampil kode sumber; pratinjau memakai komponen asli. |
+| **VII. Dokumentasi Adalah Bagian dari Selesai** | LULUS | Halaman `/docs/components/button` (Inggris) dan `/id/docs/components/button` (Indonesia) masing-masing memuat tujuh bagian wajib plus penampil kode sumber; pratinjau memakai komponen asli. |
 | **VIII. Diuji Berdampingan** | LULUS | Test ditulis bersama komponen: Vitest untuk varian/ukuran/state/asChild/keyboard, Playwright untuk aksesibilitas, mode, zoom, dan paritas salin vs paket. |
 | **IX. Sederhana dan Berversi** | LULUS | Satu pola varian (CVA), tanpa bundler tambahan (build paket dengan `tsc`), tanpa state global. Changesets mengelola `CHANGELOG.md` dan semver; versi disematkan ke item registry. |
 
@@ -85,7 +85,7 @@ Setelah `research.md`, `data-model.md`, `contracts/`, dan `quickstart.md` dituli
 
 ### Complexity Tracking
 
-Tidak ada pelanggaran constitution. Tidak ada token komponen, tidak ada abstraksi tambahan yang membutuhkan justifikasi. Tiga keputusan yang menambah permukaan (sidecar versi item salin, halaman `.md` terpisah, dan skrip pemeriksaan sendiri) bukan penyimpangan prinsip; alasannya ada di `research.md` dan `data-model.md`.
+Tidak ada pelanggaran constitution. Tidak ada token komponen, tidak ada abstraksi tambahan yang membutuhkan justifikasi. Empat keputusan yang menambah permukaan (sidecar versi item salin, halaman `.md` per bahasa, route group locale, dan skrip pemeriksaan sendiri) bukan penyimpangan prinsip; alasannya ada di `research.md` dan `data-model.md`.
 
 ## Project Structure
 
@@ -100,7 +100,7 @@ specs/001-fondasi-button/
 ├── contracts/
 │   ├── button-api.md                 # Kontrak API Button
 │   └── component-metadata.schema.json # Skema metadata komponen
-├── checklists/requirements.md        # Sudah ada, tidak diubah
+├── checklists/requirements.md        # Diperbarui: paket final dan dua bahasa
 └── tasks.md             # Belum dibuat; menunggu review manusia
 ```
 
@@ -110,14 +110,27 @@ specs/001-fondasi-button/
 apps/
 └── docs/                            # Situs dokumentasi Next.js 16 (App Router)
     ├── app/
-    │   ├── docs/components/[slug]/page.tsx   # Halaman komponen
-    │   ├── llms.txt/route.ts                 # Menyajikan llms.txt hasil generate
-    │   └── layout.tsx                        # ThemeProvider + .dark di <html>
-    ├── components/                  # Kerangka docs: preview, props table, mode toggle
-    ├── content/components/button.md # Prosa dokumentasi (Inggris), satu sumber
-    ├── examples/button/*.tsx        # Contoh yang dirender dan ditampilkan
+    │   ├── (en)/
+    │   │   ├── layout.tsx                    # Root layout, <html lang="en">
+    │   │   ├── page.tsx
+    │   │   ├── docs/components/[slug]/page.tsx
+    │   │   └── llms.txt/route.ts             # /llms.txt (indeks dua bahasa)
+    │   └── (id)/
+    │       ├── layout.tsx                    # Root layout, <html lang="id">
+    │       └── id/
+    │           ├── page.tsx
+    │           └── docs/components/[slug]/page.tsx
+    ├── components/                  # ComponentDocsPage, preview, props table, mode/language switch
+    ├── i18n.ts                      # Konfigurasi locale + kamus label UI
+    ├── content/components/
+    │   ├── button.en.md             # Prosa Inggris
+    │   ├── button.id.md             # Prosa Indonesia
+    │   └── button.props.id.json     # Terjemahan deskripsi props
+    ├── examples/button/*.tsx        # Contoh yang dirender dan ditampilkan (dipakai kedua locale)
     ├── generated/                   # Metadata hasil generate (di-commit)
-    ├── public/r/*.json              # Registry hasil generate (di-commit)
+    ├── public/
+    │   ├── r/*.json                 # Registry hasil generate (di-commit)
+    │   └── docs/components/button.md + id/docs/components/button.md  # Hasil generate
     └── next.config.ts               # transpilePackages, MDX
 packages/
 └── ui/
@@ -128,25 +141,26 @@ packages/
     │   ├── styles/theme.css               # Token light/dark + @theme inline
     │   └── index.ts                       # Export publik
     ├── test/                             # Vitest + setup jsdom
-    ├── package.json                      # @legion/ui (private)
+    ├── package.json                      # @legionv4/ui (private)
     └── tsconfig.build.json               # Emit ESM + .d.ts ke dist/
 registry.json                          # Manifest item (theme, utils, button)
 scripts/
 ├── build-registry.ts                  # shadcn build + stempel versi + sidecar
-├── generate-docs.ts                   # llms.txt, metadata, halaman .md
+├── generate-docs.ts                   # llms.txt, metadata, halaman .md (en/id)
 ├── check-tokens.ts                    # Kelengkapan token + format nilai
 ├── check-token-literals.ts            # AST scan literal/arbitrer
 ├── check-contrast.ts                  # colorjs.io + pasangan kontras
 ├── check-registry.ts                  # Identitas, versi, paritas
+├── check-docs-parity.ts               # Tujuh bagian + deskripsi props en/id
 └── check-size.ts                      # Budget gzip
-e2e/                                   # Playwright: a11y, mode, zoom, paritas
+e2e/                                   # Playwright: a11y, mode, zoom, paritas, locale
 evals/ai-baseline/tasks.md             # Tiga tugas baku AI (SC-007)
 registry.config.json                   # Base URL registry + konfigurasi generate
 AGENTS.md                              # Panduan agen di repo
-llms.txt                               # Indeks teks hasil generate
+llms.txt                               # Indeks teks hasil generate (dua bahasa)
 ```
 
-**Structure Decision**: Monorepo pnpm dua workspace (`apps/docs`, `packages/ui`) tanpa orchestrator tambahan; skrip pemeriksaan di root memakai `node --experimental-strip-types`. Paket `@legion/ui` mengekspor sumber untuk workspace dan `dist/` untuk distribusi (`publishConfig.exports`). Situs dokumentasi mengimpor sumber yang sama lewat `transpilePackages`, sehingga pratinjau tidak pernah memakai salinan kode. Registry berada di root karena `shadcn build` membaca `registry.json` dan path file relatif terhadapnya.
+**Structure Decision**: Monorepo pnpm dua workspace (`apps/docs`, `packages/ui`) tanpa orchestrator tambahan; skrip pemeriksaan di root memakai `node --experimental-strip-types`. Paket `@legionv4/ui` mengekspor sumber untuk workspace dan `dist/` untuk distribusi (`publishConfig.exports`). Situs dokumentasi mengimpor sumber yang sama lewat `transpilePackages`, sehingga pratinjau tidak pernah memakai salinan kode. Dua locale memakai route group dengan root layout masing-masing (`(en)` dan `(id)`) agar `<html lang>` benar tanpa middleware; kamus label dan konfigurasi locale berada di `apps/docs/i18n.ts`, tanpa dependensi i18n tambahan. Registry berada di root karena `shadcn build` membaca `registry.json` dan path file relatif terhadapnya.
 
 ## Phase 0: Research — Keputusan
 
@@ -155,13 +169,14 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 | Keputusan | Pilihan |
 | --- | --- |
 | Kerangka dokumentasi | Next.js 16 App Router + MDX + Tailwind 4, `next-themes`, Shiki server-side |
+| Bahasa dokumentasi | Inggris + Indonesia; route group per locale dengan `<html lang>` benar, kamus label statis, prosa per bahasa |
 | Pola varian | CVA sebagai satu-satunya pola |
 | Test runner | Vitest + Testing Library (unit), Playwright + axe (browser) |
 | Pemeriksaan kontras | `colorjs.io` + manifest pasangan kontras; alpha dikompositkan ke latar |
 | Pemeriksaan aksesibilitas | `@axe-core/playwright` di light/dark + daftar periksa manual per komponen |
 | Build/distribusi registry | `shadcn build` + post-stempel (`meta.legion`, sidecar versi), validasi `shadcn/schema` |
 | Build paket | `tsc` (ESM + `.d.ts`), tanpa bundler |
-| Sumber metadata | `react-docgen-typescript` + JSDoc; prosa Markdown per komponen |
+| Sumber metadata | `react-docgen-typescript` + JSDoc; prosa Markdown per bahasa; overlay terjemahan props |
 | Versi | Changesets; versi paket disuntik ke registry dan sidecar |
 | CI | GitHub Actions: seluruh check + unit + e2e sebagai gate merge |
 
@@ -169,7 +184,7 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 
 ### Token dan theme
 
-- `theme.css` memuat: `@import "tailwindcss"`, `@custom-variant dark`, blok `:root`, blok `.dark`, dan `@theme inline` untuk pemetaan `--color-*` serta turunan radius shadcn v4 (`calc(var(--radius) * n)`). Paket mengekspornya sebagai `@legion/ui/styles.css` (`exports: { "./styles.css": "./src/styles/theme.css" }`), dan build menyalinnya ke `dist/styles.css` untuk distribusi.
+- `theme.css` memuat: `@import "tailwindcss"`, `@custom-variant dark`, blok `:root`, blok `.dark`, dan `@theme inline` untuk pemetaan `--color-*` serta turunan radius shadcn v4 (`calc(var(--radius) * n)`). Paket mengekspornya sebagai `@legionv4/ui/styles.css` (`exports: { "./styles.css": "./src/styles/theme.css" }`), dan build menyalinnya ke `dist/styles.css` untuk distribusi.
 - 19 token warna semantic dari daftar baku constitution; nilai `oklch()`, alpha diizinkan; primitive dinamai menurut warna.
 - Radius dasar `--radius` dideklarasikan di kedua mode (nilai sama); turunan `--radius-sm` sampai `--radius-4xl` didefinisikan sekali di `@theme inline` dan mengikuti nilai dasar tiap mode.
 - `--destructive-foreground` memakai nilai constitution: light `oklch(0.985 0 0)`, dark `oklch(0.205 0 0)`.
@@ -187,21 +202,24 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 - Perubahan permukaan saat hover/active memakai alpha dari token (mis. `bg-primary/90`); pasangan kontras state tersebut ikut diperiksa sebagai komposit terhadap latar, sehingga rasio tetap ≥ 4,5:1 di kedua mode. Varian `destructive` memakai penekanan bayangan, bukan peredupan permukaan, karena `--destructive-foreground` constitution tepat 4,56:1 di light.
 - Kontrak lengkap: [contracts/button-api.md](./contracts/button-api.md).
 
-### Dokumentasi
+### Dokumentasi (Inggris dan Indonesia)
 
-- Halaman `/docs/components/button`: pratinjau semua varian/ukuran/state di light dan dark, cara pasang paket, cara pasang salin, contoh kode, tabel props, dependensi, catatan aksesibilitas, dan penampil kode sumber.
-- Prosa berbahasa Inggris di `apps/docs/content/components/button.md`; contoh di `apps/docs/examples/button/*.tsx` dirender dan teksnya dibaca dari file yang sama.
-- `generate-docs.ts` menghasilkan: `apps/docs/generated/metadata/button.json`, `apps/docs/public/docs/components/button.md`, dan `llms.txt` di root. Situs menyajikan `llms.txt` yang sama lewat `app/llms.txt/route.ts`. Metadata memakai skema [contracts/component-metadata.schema.json](./contracts/component-metadata.schema.json).
+- Dua halaman: `/docs/components/button` (Inggris, default) dan `/id/docs/components/button` (Indonesia). Keduanya memuat tujuh bagian wajib yang sama: pratinjau/varian, pasang paket, pasang salinan, contoh kode, tabel props, dependensi, catatan aksesibilitas, plus penampil kode sumber.
+- Locale diimplementasikan dengan route group `(en)` dan `(id)`, masing-masing punya root layout sendiri sehingga `<html lang>` bernilai `en`/`id` tanpa middleware. Halaman menyediakan pengalih bahasa yang mempertahankan komponen dan mode; `<link rel="alternate" hreflang>` diisi untuk kedua locale.
+- Prosa per bahasa di `apps/docs/content/components/button.en.md` dan `button.id.md`; label UI (judul bagian, tombol pasang, pengalih mode/bahasa) berasal dari kamus bertipe di `apps/docs/i18n.ts`. Identifier API, nama props, dan kode contoh tetap Inggris.
+- Deskripsi props: JSDoc Inggris menjadi sumber `en`; overlay `apps/docs/content/components/button.props.id.json` menyediakan deskripsi Indonesia. `generate-docs.ts` menggabungkan keduanya ke metadata; prop tanpa terjemahan menggagalkan generate.
+- Contoh di `apps/docs/examples/button/*.tsx` dipakai kedua locale (satu sumber kode); teks pratinjau mengikuti komponen asli.
+- `generate-docs.ts` menghasilkan `apps/docs/generated/metadata/button.json` (berisi `docs.locales` untuk `en` dan `id`), `apps/docs/public/docs/components/button.md`, `apps/docs/public/id/docs/components/button.md`, dan `llms.txt` di root dengan entri kedua bahasa. Situs menyajikan `llms.txt` yang sama lewat `app/(en)/llms.txt/route.ts`. Metadata memakai skema [contracts/component-metadata.schema.json](./contracts/component-metadata.schema.json).
 - Pipeline build tunggal: `pnpm build` menjalankan build paket (`tsc`) → `generate-docs` → `build-registry` → `next build`; `pnpm docs:build` adalah alias untuk urutan yang sama.
-- `check:freshness` menjalankan generate lalu `git diff --exit-code` pada artefak tersebut.
+- `check:freshness` menjalankan generate lalu `git diff --exit-code` pada seluruh artefak dua bahasa; `check:docs-parity` memastikan kedua halaman memuat tujuh bagian dan tidak ada prop tanpa deskripsi `en`/`id`.
 
 ### Registry dan distribusi
 
 - `registry.json` berisi tiga item: `theme` (`registry:theme`, cssVars light/dark/theme), `utils` (`registry:lib`, `cn`), `button` (`registry:ui`, file komponen + sidecar).
 - Item `button` memakai `registryDependencies` ke `theme` dan `utils` dengan base URL dari `registry.config.json` (default `http://localhost:3000`).
-- `build-registry.ts`: jalankan `shadcn build --output apps/docs/public/r`, lalu stempel `meta.legion = { version, source, docs }` dan tambahkan sidecar `@ui/button.legion.json` (versi + URL sumber) agar salinan mencatat asal versi (FR-015). Hasil validasi memakai `shadcn/schema`.
+- `build-registry.ts`: jalankan `shadcn build --output apps/docs/public/r`, lalu stempel `meta.legion = { version, source, docs: { en, id } }` dan tambahkan sidecar `@ui/button.legion.json` (versi + URL sumber untuk kedua bahasa) agar salinan mencatat asal versi (FR-015). Hasil validasi memakai `shadcn/schema`.
 - File komponen pada item registry disalin byte-identik dari sumber; sidecar adalah metadata hasil generate, bukan kode komponen.
-- Paket `@legion/ui` dibangun dengan `tsc` dari sumber yang sama; `check:registry` memastikan file item = sumber, versi item = versi paket, dan test Playwright membandingkan hasil render paket vs salinan.
+- Paket `@legionv4/ui` dibangun dengan `tsc` dari sumber yang sama; `check:registry` memastikan file item = sumber, versi item = versi paket, dan test Playwright membandingkan hasil render paket vs salinan.
 
 ### Pemeriksaan otomatis
 
@@ -211,6 +229,7 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 | Literal dan arbitrer | `pnpm check:token-literals` | Ada `#hex`, `rgb(`, `hsl(`, `oklch(` di sumber komponen (kecuali definisi token `styles/theme.css`); arbitrary value visual `bg-[…]`, `text-[13px]`, `shadow-[…]`, `rounded-[…]`, `ring-[3px]` | FR-011, SC-003, Prinsip I |
 | Kontras | `pnpm check:contrast` | Rasio di bawah ambang per pasangan di salah satu mode | FR-002, SC-001 |
 | Kesegaran dokumen/metadata | `pnpm check:freshness` | Generate ulang menghasilkan diff | FR-009, FR-010, SC-005 |
+| Paritas dua bahasa | `pnpm check:docs-parity` | Salah satu locale tidak memuat tujuh bagian; prop tanpa deskripsi `en`/`id`; route/markdown `en`/`id` tidak konsisten | FR-008, FR-009, SC-005 |
 | Identitas registry | `pnpm check:registry` | Item ≠ sumber, versi item ≠ versi paket, dependensi metadata ≠ kode | FR-007, FR-009, SC-004 |
 | Aksesibilitas | `pnpm test:e2e` | axe menemukan pelanggaran; keyboard/fokus/zoom/reduced-motion gagal | FR-006, FR-013, SC-006, SC-008 |
 | Ukuran | `pnpm check:size` | Melebihi budget performa | Performance Goals |
@@ -223,11 +242,11 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 | SC | Metode | Bukti |
 | --- | --- | --- |
 | SC-001 | `pnpm check:contrast` | Log nol kegagalan untuk semua pasangan di light/dark |
-| SC-002 | Uji pemakaian: 5 peserta baru memasang/menyalin Button dari dokumentasi | Catatan waktu dan pertanyaan; lulus bila ≥ 4/5 berhasil < 10 menit |
+| SC-002 | Uji pemakaian: 5 peserta baru memasang/menyalin Button dari dokumentasi (Inggris atau Indonesia) | Catatan waktu dan pertanyaan; lulus bila ≥ 4/5 berhasil < 10 menit |
 | SC-003 | `pnpm check:token-literals` | Log nol temuan |
 | SC-004 | `pnpm check:registry` + e2e paritas salin vs paket | Nol perbedaan isi; nol perbedaan markup/perilaku |
-| SC-005 | `pnpm check:freshness` | `git diff --exit-code` bersih; tujuh bagian ada |
-| SC-006 | `pnpm test:e2e` (axe light/dark) + `button.a11y.md` | Nol pelanggaran axe; semua butir manual `pass` |
+| SC-005 | `pnpm check:freshness` + `pnpm check:docs-parity` | `git diff --exit-code` bersih; tujuh bagian ada di kedua bahasa; prop punya deskripsi `en`/`id` |
+| SC-006 | `pnpm test:e2e` (axe light/dark, kedua locale) + `button.a11y.md` | Nol pelanggaran axe; semua butir manual `pass` |
 | SC-007 | `evals/ai-baseline/tasks.md` dijalankan pada agen tanpa konteks repo | ≥ 2/3 tugas selesai tanpa pertanyaan, sesuai dokumentasi |
 | SC-008 | e2e zoom 200% dan viewport 320 px | Semua fungsi Button tercapai; tidak ada teks terpotong |
 
@@ -235,7 +254,7 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 
 1. **Fondasi repo dan token** — workspace pnpm, `theme.css`, `check:tokens`, `check:token-literals`, `check:contrast`.
 2. **Button dan test** — komponen, JSDoc, `button.a11y.md`, unit test, build paket, budget ukuran.
-3. **Dokumentasi** — situs Next.js, tujuh bagian, contoh, mode, generate metadata/`llms.txt`/`.md`, `check:freshness`.
+3. **Dokumentasi dua bahasa** — situs Next.js, tujuh bagian di `en`/`id`, contoh, mode, kamus label, terjemahan props, generate metadata/`llms.txt`/`.md`, `check:freshness`, `check:docs-parity`.
 4. **Registry dan distribusi** — `registry.json`, stempel versi, sidecar, `check:registry`, uji paritas salin vs paket.
 5. **Gate CI dan bukti Converge** — workflow, axe, manual checklist, uji tugas AI, changelog.
 
@@ -249,6 +268,7 @@ Ringkasan; rincian dan alternatif di [research.md](./research.md).
 | Salinan tidak membawa token | Button salinan tidak tampil benar | Item `theme` menjadi `registryDependencies`; uji paritas merender salinan di proyek fixture tanpa token lain |
 | `oklch` tidak didukung browser lama | Warna gagal | Baseline browser Tailwind 4 sudah mensyaratkan dukungan `oklch`; tidak ada fallback hex (dilarang Prinsip I) |
 | Dokumentasi basi | Agen AI memakai info salah | `check:freshness` sebagai gate; artefak di-commit dan di-diff |
+| Terjemahan Indonesia tertinggal | Dua bahasa tidak setara; agen memakai info lama | `check:docs-parity` mewajibkan tujuh bagian dan deskripsi props di `en`/`id`; generate gagal bila overlay terjemahan tidak lengkap |
 | Uji AI subjektif | SC-007 tidak terukur | Tiga tugas baku + rubrik biner (selesai tanpa pertanyaan, sesuai dokumentasi) dijalankan dua penilai |
 
 ## Complexity Tracking

@@ -115,7 +115,7 @@ Agen AI yang tidak membangun Legion diberi satu tugas antarmuka kecil. Ia menemu
 ## Assumptions
 
 - Cakupan pilot adalah 10 komponen; fitur ini hanya fondasi dan Button.
-- Nama paket masih sementara dan ditandai privat; nama final dikunci saat publikasi pertama.
-- Dokumentasi komponen ditulis dalam bahasa Inggris untuk konsumen library; constitution dan spesifikasi berbahasa Indonesia.
+- Nama paket final adalah `@legionv4/ui` dan tetap privat sampai publikasi pertama.
+- Dokumentasi komponen tersedia dalam bahasa Inggris dan Indonesia; identifier API dan kode tetap berbahasa Inggris; constitution dan spesifikasi berbahasa Indonesia.
 - Situs dokumentasi berada di repositori yang sama dan menyediakan pengalih mode untuk verifikasi.
 - Konsumen utama adalah tim produk internal dan agen AI.
