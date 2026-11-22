@@ -101,7 +101,7 @@ specs/001-fondasi-button/
 │   ├── button-api.md                 # Kontrak API Button
 │   └── component-metadata.schema.json # Skema metadata komponen
 ├── checklists/requirements.md        # Diperbarui: paket final dan dua bahasa
-└── tasks.md             # Belum dibuat; menunggu review manusia
+└── tasks.md             # Daftar task implementasi (Phase 2)
 ```
 
 ### Source Code (repository root)
@@ -114,6 +114,7 @@ apps/
     │   │   ├── layout.tsx                    # Root layout, <html lang="en">
     │   │   ├── page.tsx
     │   │   ├── docs/components/[slug]/page.tsx
+    │   │   ├── preview/button/page.tsx       # Harness e2e US1
     │   │   └── llms.txt/route.ts             # /llms.txt (indeks dua bahasa)
     │   └── (id)/
     │       ├── layout.tsx                    # Root layout, <html lang="id">
@@ -154,6 +155,9 @@ scripts/
 ├── check-docs-parity.ts               # Tujuh bagian + deskripsi props en/id
 └── check-size.ts                      # Budget gzip
 e2e/                                   # Playwright: a11y, mode, zoom, paritas, locale
+fixtures/copy-consumer/                 # Aplikasi konsumen untuk uji salin vs paket
+vitest.config.ts                        # Konfigurasi unit test
+playwright.config.ts                    # Konfigurasi e2e
 evals/ai-baseline/tasks.md             # Tiga tugas baku AI (SC-007)
 registry.config.json                   # Base URL registry + konfigurasi generate
 AGENTS.md                              # Panduan agen di repo
@@ -281,4 +285,4 @@ Tidak ada penyimpangan dari constitution. Kolom berikut sengaja kosong.
 
 ## Gate
 
-Plan selesai dan Constitution Check terisi. `tasks.md` belum dibuat; menunggu review manusia atas `plan.md`, `research.md`, `data-model.md`, `contracts/`, dan `quickstart.md`.
+Plan selesai dan disetujui; `tasks.md` sudah dibuat untuk tahap implementasi. Implementasi belum dijalankan dan menunggu keputusan berikutnya.
