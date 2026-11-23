@@ -1,0 +1,34 @@
+{
+  "examples": [
+    {
+      "file": "basic.tsx",
+      "title": "Basic",
+      "description": "A primary action with the default variant and size."
+    },
+    {
+      "file": "variants.tsx",
+      "title": "Variants",
+      "description": "All five visual variants side by side."
+    },
+    {
+      "file": "sizes.tsx",
+      "title": "Sizes",
+      "description": "The small, default, and large sizes."
+    },
+    {
+      "file": "loading.tsx",
+      "title": "Loading and disabled",
+      "description": "Busy and disabled states with an announced loading label."
+    },
+    {
+      "file": "icon.tsx",
+      "title": "Icons",
+      "description": "An icon-only button with an accessible name and an icon with text."
+    },
+    {
+      "file": "link.tsx",
+      "title": "Link composition",
+      "description": "asChild renders an anchor with button styling and link semantics."
+    }
+  ]
+}

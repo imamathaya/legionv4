@@ -1,3 +1,8 @@
 {
-  "baseUrl": "http://localhost:3000"
+  "baseUrl": "http://localhost:3000",
+  "repository": "https://github.com/imamathaya/legionv4",
+  "docs": {
+    "en": "/docs/components",
+    "id": "/id/docs/components"
+  }
 }

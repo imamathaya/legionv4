@@ -1,72 +1,73 @@
 ## Pratinjau dan varian
 
-[[PREVIEW]]
+Button adalah komponen referensi Legion v4. Tersedia lima varian (`default`, `secondary`, `destructive`, `outline`, `ghost`) dan tiga ukuran (`sm`, `default`, `lg`). Seluruh nilai visual berasal dari token semantik, sehingga kode yang sama tampil benar di mode terang dan gelap.
+
+Pratinjau di atas merender sumber paket yang sebenarnya. Ubah tema lewat sakelar di header: tidak ada kode komponen yang berubah.
 
 ## Pasang sebagai paket
 
-Pasang paket privat dan impor stylesheet token-nya:
+Pasang paket privat lalu impor stylesheet-nya satu kali di root aplikasi.
 
 ```bash
 pnpm add @legionv4/ui
 ```
 
 ```tsx
-import { Button } from "@legionv4/ui";
 import "@legionv4/ui/styles.css";
-
-export function Contoh() {
-  return <Button>Simpan</Button>;
-}
+import { Button } from "@legionv4/ui";
 ```
+
+Paket membutuhkan React 19 dan konsumen Tailwind CSS 4. Stylesheet mendefinisikan token semantik beserta pemetaan Tailwind-nya.
 
 ## Pasang sebagai salinan
 
-Salin komponen beserta dependensinya langsung ke proyek yang sudah memakai shadcn dan Tailwind CSS 4:
+Gunakan registry yang kompatibel dengan shadcn bila Anda ingin sumber komponen berada di repositori, bukan sebagai dependensi.
 
 ```bash
-npx shadcn@latest add http://localhost:3000/r/button.json
+pnpm dlx shadcn@4.23.0 add http://localhost:3000/r/button.json
 ```
 
-Salinan menyertakan `button.legion.json` yang mencatat versi sumber dan URL dokumentasi, sehingga Anda tahu kapan salinan tertinggal.
+Item ini bergantung pada item `theme` dan `utils`, jadi keduanya ikut terpasang. Berkas sidecar `components/ui/button.legion.json` mencatat versi sumber dan URL dokumentasi, sehingga Anda tahu kapan salinan tertinggal.
 
 ## Pemakaian
-
-[[EXAMPLES]]
 
 ```tsx
 import { Button } from "@legionv4/ui";
 
-<Button>Simpan</Button>
-<Button variant="secondary" size="sm">Batal</Button>
-<Button variant="destructive" loading loadingLabel="Menghapus">Hapus</Button>
+<Button>Simpan perubahan</Button>
+
+<Button variant="secondary" size="sm">
+  Batal
+</Button>
+
+<Button variant="destructive" loading loadingLabel="Menghapus">
+  Hapus
+</Button>
+
 <Button variant="outline" asChild>
-  <a href="/id/docs/components/button">Baca dokumentasi</a>
+  <a href="/id/docs">Baca dokumentasi</a>
 </Button>
 ```
 
+`asChild` merender elemen anak dengan gaya dan atribut aksesibilitas yang sama, sehingga tautan tetap memiliki semantik tautan. `loading` menonaktifkan aktivasi, memasang `aria-busy`, dan mengumumkan `loadingLabel` satu kali melalui area status.
+
 ## Props
 
-[[PROPS]]
+Tabel props di bawah dibangkitkan dari sumber TypeScript dan JSDoc. Atribut native tombol seperti `type`, `form`, `onClick`, dan `aria-*` diteruskan tanpa perubahan.
 
 ## Dependensi
 
-[[DEPENDENCIES]]
+Daftar dependensi di bawah dibangkitkan dari item registry. Komponen hanya mengimpor paket runtime yang benar-benar dipakai; token datang melalui item theme.
 
 ## Aksesibilitas
 
-Button menargetkan WCAG 2.2 AA. Setiap varian dan state memakai token semantic; teks memenuhi 4,5:1, batas kontrol dan indikator fokus memenuhi 3:1 di kedua mode, dan target minimal 24 × 24 piksel CSS.
+Button menargetkan WCAG 2.2 Level AA. Kontraknya mencakup:
 
-- Keyboard: Tab mencapai tombol; Enter dan Space mengaktifkan tombol native; tautan aktif dengan Enter.
-- Fokus: outline dua piksel dengan offset tetap terlihat dan tidak terpotong.
-- Loading: `aria-busy` dipasang, aksi diblokir, dan `loadingLabel` yang terlokalisasi diumumkan satu kali.
-- Hanya ikon: sediakan `aria-label` atau `aria-labelledby`.
-- Gerakan: spinner berhenti saat `prefers-reduced-motion`.
-- Zoom dan reflow: label membungkus pada zoom 200% dan lebar 320 piksel, bukan terpotong.
-
-Bukti manual dicatat di `packages/ui/src/components/ui/button.a11y.md`.
-
-## Sumber
-
-Dokumentasi merender file sumber yang sama dengan paket dan item salinan registry.
-
-[[SOURCE]]
+- Keyboard: Tab memfokuskan; Enter dan Space mengaktifkan tombol native; tautan aktif dengan Enter.
+- Fokus: outline berwarna token terlihat di kedua mode dan tidak terpotong.
+- Nama: teks terlihat menamai tombol; pemakaian hanya ikon wajib memberi `aria-label` atau `aria-labelledby`.
+- Memuat: `aria-busy="true"`, spinner tersembunyi, dan satu pesan `role="status"`.
+- Ukuran target: minimal 24 × 24 piksel CSS; ukuran `sm` tetap memenuhi tinggi minimum.
+- Kontras: teks memenuhi 4,5:1 dan batas kontrol serta cincin fokus memenuhi 3:1 di kedua mode.
+- Gerakan: spinner dan transisi berhenti saat `prefers-reduced-motion` aktif.
+- Reflow: label panjang membungkus, dan kontrol tetap dapat dipakai pada zoom 200% dan lebar 320 px.

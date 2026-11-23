@@ -3,25 +3,29 @@
 import * as React from "react";
 import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Loader2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
+
 import { cn } from "../../lib/utils";
 
+/** Visual styles available for Button. */
 export const buttonVariants = cva(
-  "inline-flex min-w-0 items-center justify-center gap-2 rounded-md text-center font-medium break-words whitespace-normal transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none",
+  "inline-flex min-w-0 items-center justify-center gap-2 whitespace-normal rounded-md text-center text-sm font-medium transition outline-none focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:animate-none forced-colors:outline",
   {
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/70",
-        destructive: "bg-destructive text-destructive-foreground hover:shadow-sm active:shadow-none",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:shadow-sm active:shadow-none",
         outline:
           "border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-        ghost: "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
+        ghost:
+          "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
       },
       size: {
-        sm: "min-h-8 gap-1.5 px-3 py-1.5 text-sm",
-        default: "min-h-9 px-4 py-2 text-sm",
-        lg: "min-h-10 px-6 py-2.5 text-base",
+        sm: "min-h-8 gap-1.5 px-3 text-sm",
+        default: "min-h-9 px-4 text-sm",
+        lg: "min-h-10 gap-2 px-6 text-base",
       },
     },
     defaultVariants: {
@@ -34,94 +38,106 @@ export const buttonVariants = cva(
 export type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>;
 export type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   /** Visual style of the button. */
   variant?: ButtonVariant;
   /** Control size. */
   size?: ButtonSize;
-  /** Extra classes merged after the variant classes. */
-  className?: string;
-  /** Renders the child element instead of a button while keeping button styles and accessibility attributes. */
+  /** Renders the single child element instead of a native button. */
   asChild?: boolean;
-  /** Disables activation and announces a busy state to assistive technology. */
+  /** Blocks activation and exposes a busy state while true. */
   loading?: boolean;
-  /** Screen-reader status text used while loading is true. */
+  /** Screen-reader text announced once while loading is true. */
   loadingLabel?: string;
+  /** Extra classes merged after variant classes. */
+  className?: string;
+};
+
+function assignRef<T>(target: React.ForwardedRef<T>, value: T | null): void {
+  if (typeof target === "function") {
+    target(value);
+  } else if (target) {
+    target.current = value;
+  }
 }
 
-function containsReadableText(node: React.ReactNode): boolean {
-  if (typeof node === "string" || typeof node === "number") {
-    return String(node).trim().length > 0;
-  }
-  if (Array.isArray(node)) {
-    return node.some(containsReadableText);
-  }
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return containsReadableText(node.props.children);
-  }
-  return false;
-}
-
+/** A token-driven action control with five variants, three sizes, and six states. */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
-    variant,
-    size,
+    className,
+    variant = "default",
+    size = "default",
     asChild = false,
     loading = false,
     loadingLabel = "Loading",
-    className,
-    children,
+    disabled = false,
     onClick,
-    disabled,
+    children,
     tabIndex,
+    "aria-busy": ariaBusy,
+    "aria-disabled": ariaDisabled,
     ...props
   },
-  ref,
+  forwardedRef,
 ) {
-  const isDisabled = Boolean(disabled || loading);
-  const Component = asChild ? Slot : "button";
+  const Root = asChild ? Slot : "button";
+  const inert = disabled || loading;
+  const localRef = React.useRef<HTMLButtonElement | null>(null);
 
-  if (
-    process.env.NODE_ENV !== "production" &&
-    !containsReadableText(children) &&
-    !props["aria-label"] &&
-    !props["aria-labelledby"]
-  ) {
-    console.warn("Legion Button: provide aria-label or aria-labelledby for icon-only buttons.");
-  }
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    const element = localRef.current;
+    if (!element) return;
+    const labelled =
+      element.getAttribute("aria-label") || element.getAttribute("aria-labelledby");
+    const visibleText = (element.textContent ?? "").trim();
+    if (!labelled && visibleText.length === 0) {
+      console.warn(
+        "Button: icon-only buttons need an accessible name (aria-label or aria-labelledby).",
+      );
+    }
+  }, [children, props["aria-label"], props["aria-labelledby"]]);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (loading) {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    if (inert) {
       event.preventDefault();
+      event.stopPropagation();
       return;
     }
     onClick?.(event);
   };
 
   return (
-    <Component
-      ref={ref}
-      data-slot="button"
-      data-variant={variant ?? "default"}
-      data-size={size ?? "default"}
-      aria-busy={loading ? true : undefined}
-      aria-disabled={asChild && isDisabled ? true : undefined}
-      disabled={asChild ? undefined : isDisabled}
-      tabIndex={asChild && isDisabled ? -1 : tabIndex}
-      className={cn(buttonVariants({ variant, size }), className)}
-      onClick={handleClick}
-      {...props}
-    >
-      {loading ? <Loader2 aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none" /> : null}
-      {loading ? (
-        <span role="status" className="sr-only">
-          {loadingLabel}
-        </span>
-      ) : null}
-      {asChild ? <Slottable>{children}</Slottable> : children}
-    </Component>
+    <>
+      <Root
+        {...props}
+        ref={(node: HTMLButtonElement | null) => {
+          localRef.current = node;
+          assignRef(forwardedRef, node);
+        }}
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size }), className)}
+        aria-busy={loading ? true : ariaBusy}
+        aria-disabled={asChild && inert ? true : ariaDisabled}
+        disabled={asChild ? undefined : inert}
+        tabIndex={asChild && inert ? -1 : tabIndex}
+        onClick={handleClick}
+      >
+        {loading ? (
+          <LoaderCircle
+            aria-hidden="true"
+            data-slot="button-spinner"
+            className="size-4 shrink-0 animate-spin motion-reduce:animate-none"
+          />
+        ) : null}
+        <Slottable>{children}</Slottable>
+      </Root>
+      <span role="status" className="sr-only">
+        {loading ? loadingLabel : null}
+      </span>
+    </>
   );
 });
 

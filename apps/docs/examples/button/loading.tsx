@@ -1,16 +1,15 @@
-"use client";
-
 import { Button } from "@legionv4/ui";
 
-export function LoadingExample() {
+export function ButtonLoadingExample() {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-3">
       <Button loading loadingLabel="Saving">
-        Save
+        Saving
       </Button>
       <Button variant="destructive" loading loadingLabel="Deleting">
         Delete
       </Button>
+      <Button disabled>Disabled</Button>
     </div>
   );
 }

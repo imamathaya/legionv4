@@ -21,3 +21,7 @@ registry.generated.json
 apps/docs/AGENTS.md
 fixtures/copy-consumer/AGENTS.md
 chrome-cache/
+
+packages/ui/test/generated/
+
+artifacts/

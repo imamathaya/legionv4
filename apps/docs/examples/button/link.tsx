@@ -1,11 +1,14 @@
-"use client";
-
 import { Button } from "@legionv4/ui";
 
-export function LinkExample() {
+export function ButtonLinkExample() {
   return (
-    <Button variant="outline" asChild>
-      <a href="/docs/components/button">Read the docs</a>
-    </Button>
+    <div className="flex flex-wrap items-center gap-3">
+      <Button variant="outline" asChild>
+        <a href="#usage">Read the usage section</a>
+      </Button>
+      <Button asChild>
+        <a href="#accessibility">Accessibility notes</a>
+      </Button>
+    </div>
   );
 }

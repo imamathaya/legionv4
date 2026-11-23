@@ -1,23 +1,35 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { ROOT } from "./theme-utils.ts";
+import { dirname, resolve } from "node:path";
 
-type RegistryItem = {
-  files: Array<{ type: string; content?: string }>;
-};
+type RegistryItem = { files?: { path: string; content?: string }[] };
+type Sidecar = { version?: string };
 
-function readItem(name: string): RegistryItem {
-  return JSON.parse(readFileSync(resolve(ROOT, "apps/docs/public/r", `${name}.json`), "utf8")) as RegistryItem;
+const ROOT = process.cwd();
+const generated = resolve(ROOT, "packages/ui/test/generated");
+
+const buttonItem = JSON.parse(
+  readFileSync(resolve(ROOT, "apps/docs/public/r/button.json"), "utf8"),
+) as RegistryItem;
+const utilsItem = JSON.parse(
+  readFileSync(resolve(ROOT, "apps/docs/public/r/utils.json"), "utf8"),
+) as RegistryItem;
+
+const buttonFile = buttonItem.files?.find((file) => file.path.endsWith("button.tsx"));
+const utilsFile = utilsItem.files?.[0];
+if (!buttonFile?.content || !utilsFile?.content) {
+  throw new Error("registry output is missing button or utils content");
 }
 
-const fixtureRoot = resolve(ROOT, "packages/ui/test-fixture");
-mkdirSync(resolve(fixtureRoot, "components/ui"), { recursive: true });
-mkdirSync(resolve(fixtureRoot, "lib"), { recursive: true });
+for (const [path, content] of [
+  ["components/ui/button.tsx", buttonFile.content],
+  ["lib/utils.ts", utilsFile.content],
+] as const) {
+  const target = resolve(generated, path);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(target, content);
+}
 
-const button = readItem("button").files.find((file) => file.type === "registry:ui");
-const utils = readItem("utils").files.find((file) => file.type === "registry:lib");
-if (!button?.content || !utils?.content) throw new Error("Registry copy content is missing");
+const sidecar = JSON.parse(readFileSync(resolve(ROOT, "packages/ui/registry/button.legion.json"), "utf8")) as Sidecar;
+if (!sidecar.version) throw new Error("sidecar has no version");
 
-writeFileSync(resolve(fixtureRoot, "components/ui/button.tsx"), button.content);
-writeFileSync(resolve(fixtureRoot, "lib/utils.ts"), utils.content);
-console.log("Prepared registry copy fixture for parity tests.");
+console.log(`prepare:parity materialized the copy item at packages/ui/test/generated.`);

@@ -1,61 +1,82 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join, relative, resolve } from "node:path";
-import ts from "typescript";
+import { readdirSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import postcss from "postcss";
-import { ROOT } from "./theme-utils.ts";
+import ts from "typescript";
 
-const sourceRoot = resolve(ROOT, "packages/ui/src");
-const themeFile = resolve(sourceRoot, "styles/theme.css");
-const findings: string[] = [];
-
-const forbiddenValues = [
-  { pattern: /#[0-9a-fA-F]{3,8}\b/, label: "hex color" },
-  { pattern: /\brgba?\(/, label: "rgb color" },
-  { pattern: /\bhsla?\(/, label: "hsl color" },
-  { pattern: /\boklch\(/, label: "oklch color" },
+const SOURCE_TARGETS = [
+  resolve("packages/ui/src/components"),
+  resolve("packages/ui/src/lib"),
+  resolve("apps/docs/examples"),
 ];
-const arbitraryUtility =
-  /(?:^|\s)(?:bg|text|border|ring|shadow|rounded|fill|stroke|outline|decoration|from|via|to|w|h|min-w|min-h|max-w|max-h|size|inset|top|bottom|left|right|z|gap|space-x|space-y|p[xytrbl]?|m[xytrbl]?)-\[[^\]]+\]/;
 
-function walk(directory: string): string[] {
-  return readdirSync(directory).flatMap((name) => {
-    const path = join(directory, name);
-    if (statSync(path).isDirectory()) return walk(path);
-    return [path];
-  });
+const CSS_TARGETS = [resolve("packages/ui/src/styles")];
+
+const COLOUR_LITERAL = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch)\(/;
+const ARBITRARY_UTILITY =
+  /\b(?:bg|text|border|ring|outline|shadow|rounded|fill|stroke|p[trblxy]?|m[trblxy]?|w|h|size|gap|space-[xy]|font|leading|tracking|min-[hw]|max-[hw]|transition|duration|ease|grid-cols|grid-rows|basis|top|right|bottom|left|inset(?:-[xy])?)-\[[^\]]+\]/;
+const NAMED_RAW_COLOUR = /\b(?:text|bg|border|ring|outline|fill|stroke)-(?:white|black)\b/;
+
+const failures: string[] = [];
+
+function collectFiles(directory: string, extensions: string[]): string[] {
+  const found: string[] = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) found.push(...collectFiles(path, extensions));
+    else if (extensions.some((extension) => entry.name.endsWith(extension))) found.push(path);
+  }
+  return found;
 }
 
-function checkString(value: string, file: string, line: number) {
-  for (const rule of forbiddenValues) {
-    if (rule.pattern.test(value)) findings.push(`${relative(ROOT, file)}:${line} ${rule.label}: ${value}`);
-  }
-  if (arbitraryUtility.test(value)) findings.push(`${relative(ROOT, file)}:${line} arbitrary visual utility: ${value}`);
+function inspect(text: string, path: string, line?: number): void {
+  const where = line === undefined ? path : `${path}:${line}`;
+  if (COLOUR_LITERAL.test(text)) failures.push(`${where}: raw colour literal in "${text}"`);
+  if (ARBITRARY_UTILITY.test(text)) failures.push(`${where}: arbitrary utility in "${text}"`);
+  if (NAMED_RAW_COLOUR.test(text)) failures.push(`${where}: raw Tailwind colour in "${text}"`);
 }
 
-for (const file of walk(sourceRoot)) {
-  const extension = extname(file);
-  if (extension === ".css") {
-    if (file === themeFile) continue;
-    for (const declaration of postcss.parse(readFileSync(file, "utf8")).nodes) {
-      if (declaration.type === "decl") checkString(declaration.value, file, declaration.source?.start?.line ?? 0);
-    }
-    continue;
-  }
-  if (extension !== ".ts" && extension !== ".tsx") continue;
+for (const path of SOURCE_TARGETS.flatMap((target) => collectFiles(target, [".ts", ".tsx"]))) {
+  const source = ts.createSourceFile(
+    path,
+    readFileSync(path, "utf8"),
+    ts.ScriptTarget.Latest,
+    true,
+    path.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+  );
 
-  const source = ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  const visit = (node: ts.Node) => {
+  const visit = (node: ts.Node): void => {
     if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
-      const line = source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1;
-      checkString(node.text, file, line);
+      inspect(node.text, path, source.getLineAndCharacterOfPosition(node.getStart()).line + 1);
+    } else if (ts.isTemplateHead(node) || ts.isTemplateMiddle(node) || ts.isTemplateTail(node)) {
+      inspect(node.text, path, source.getLineAndCharacterOfPosition(node.getStart()).line + 1);
+    } else if (ts.isJsxAttribute(node) && node.name.getText(source) === "style") {
+      failures.push(`${path}: inline style attribute is not token-driven`);
     }
     ts.forEachChild(node, visit);
   };
   visit(source);
 }
 
-if (findings.length > 0) {
-  console.error(findings.join("\n"));
+for (const path of CSS_TARGETS.flatMap((target) => collectFiles(target, [".css"]))) {
+  const stylesheet = postcss.parse(readFileSync(path, "utf8"), { from: path });
+  stylesheet.walkDecls((declaration) => {
+    const value = declaration.value;
+    if (declaration.prop.startsWith("--")) {
+      if (/#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?)\(/.test(value)) {
+        failures.push(`${path}: token ${declaration.prop} uses a forbidden colour format`);
+      }
+      return;
+    }
+    if (COLOUR_LITERAL.test(value)) {
+      failures.push(`${path}: declaration ${declaration.prop} uses a raw colour`);
+    }
+  });
+}
+
+if (failures.length > 0) {
+  console.error(`check:token-literals failed with ${failures.length} problem(s):`);
+  for (const failure of failures) console.error(`  - ${failure}`);
   process.exit(1);
 }
-console.log("Token literal check passed: no raw colors or arbitrary visual values in component sources.");
+
+console.log("check:token-literals passed: no raw colours or arbitrary visual utilities found.");

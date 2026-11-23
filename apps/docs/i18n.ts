@@ -1,58 +1,139 @@
-export const locales = ["en", "id"] as const;
+export const LOCALES = ["en", "id"] as const;
 
-export type Locale = (typeof locales)[number];
+export type Locale = (typeof LOCALES)[number];
 
-export const dictionary = {
+export const SECTION_KEYS = [
+  "preview",
+  "package",
+  "copy",
+  "usage",
+  "props",
+  "dependencies",
+  "accessibility",
+] as const;
+
+export type SectionKey = (typeof SECTION_KEYS)[number];
+
+type Dictionary = {
+  htmlLang: string;
+  siteTitle: string;
+  siteTagline: string;
+  componentLabel: string;
+  docsNav: string;
+  previewNav: string;
+  languageLabel: string;
+  switchTo: string;
+  themeLabel: string;
+  light: string;
+  dark: string;
+  onThisPage: string;
+  sourceTitle: string;
+  examplesTitle: string;
+  dependenciesTitle: string;
+  packageName: string;
+  nativeAttributes: string;
+  propColumn: string;
+  typeColumn: string;
+  defaultColumn: string;
+  requiredColumn: string;
+  descriptionColumn: string;
+  registryLabel: string;
+  variantsLabel: string;
+  sizesLabel: string;
+  matrixLabel: string;
+  statesLabel: string;
+  targetsLabel: string;
+  notRequired: string;
+  sections: Record<SectionKey, string>;
+};
+
+export const DICTIONARIES: Record<Locale, Dictionary> = {
   en: {
-    docs: "Docs",
-    components: "Components",
-    button: "Button",
-    preview: "Preview and variants",
-    installPackage: "Install as package",
-    installCopy: "Install as copy",
-    usage: "Usage",
-    props: "Props",
-    dependencies: "Dependencies",
-    accessibility: "Accessibility",
-    source: "Source",
-    language: "Bahasa Indonesia",
+    htmlLang: "en",
+    siteTitle: "Legion v4",
+    siteTagline: "Semantic tokens, accessible components, one source of truth.",
+    componentLabel: "Component",
+    docsNav: "Docs",
+    previewNav: "Preview",
+    languageLabel: "Language",
+    switchTo: "Bahasa Indonesia",
+    themeLabel: "Theme",
     light: "Light",
     dark: "Dark",
-    system: "System",
-    toggleTheme: "Toggle theme",
-    componentIntro:
-      "A token-driven action control with five variants, three sizes, and six states.",
-    packageCommand: "pnpm add @legionv4/ui",
-    copyCommand: "npx shadcn@latest add http://localhost:3000/r/button.json",
-    accessibilityIntro:
-      "Button targets WCAG 2.2 AA. The automated axe suite and the manual checklist cover keyboard, focus, target size, contrast, loading announcements, zoom, and reduced motion.",
+    onThisPage: "On this page",
+    sourceTitle: "Source",
+    examplesTitle: "Examples",
+    dependenciesTitle: "Dependencies",
+    packageName: "Package",
+    nativeAttributes: "Native button attributes are forwarded unchanged.",
+    propColumn: "Prop",
+    typeColumn: "Type",
+    defaultColumn: "Default",
+    requiredColumn: "Required",
+    descriptionColumn: "Description",
+    registryLabel: "Registry",
+    variantsLabel: "variants",
+    sizesLabel: "sizes",
+    matrixLabel: "Variant and size matrix",
+    statesLabel: "States",
+    targetsLabel: "Icon and long label",
+    notRequired: "No",
+    sections: {
+      preview: "Preview and variants",
+      package: "Install as a package",
+      copy: "Install as a copy",
+      usage: "Usage",
+      props: "Props",
+      dependencies: "Dependencies",
+      accessibility: "Accessibility",
+    },
   },
   id: {
-    docs: "Dokumentasi",
-    components: "Komponen",
-    button: "Button",
-    preview: "Pratinjau dan varian",
-    installPackage: "Pasang sebagai paket",
-    installCopy: "Pasang sebagai salinan",
-    usage: "Pemakaian",
-    props: "Props",
-    dependencies: "Dependensi",
-    accessibility: "Aksesibilitas",
-    source: "Sumber",
-    language: "English",
+    htmlLang: "id",
+    siteTitle: "Legion v4",
+    siteTagline: "Token semantik, komponen aksesibel, satu sumber kebenaran.",
+    componentLabel: "Komponen",
+    docsNav: "Dokumentasi",
+    previewNav: "Pratinjau",
+    languageLabel: "Bahasa",
+    switchTo: "English",
+    themeLabel: "Tema",
     light: "Terang",
     dark: "Gelap",
-    system: "Sistem",
-    toggleTheme: "Ganti tema",
-    componentIntro:
-      "Kontrol aksi berbasis token dengan lima varian, tiga ukuran, dan enam state.",
-    packageCommand: "pnpm add @legionv4/ui",
-    copyCommand: "npx shadcn@latest add http://localhost:3000/r/button.json",
-    accessibilityIntro:
-      "Button menargetkan WCAG 2.2 AA. Suite axe otomatis dan daftar periksa manual mencakup keyboard, fokus, ukuran target, kontras, pengumuman loading, zoom, dan kurangi gerakan.",
+    onThisPage: "Di halaman ini",
+    sourceTitle: "Sumber",
+    examplesTitle: "Contoh",
+    dependenciesTitle: "Dependensi",
+    packageName: "Paket",
+    nativeAttributes: "Atribut native tombol diteruskan tanpa perubahan.",
+    propColumn: "Prop",
+    typeColumn: "Tipe",
+    defaultColumn: "Default",
+    requiredColumn: "Wajib",
+    descriptionColumn: "Deskripsi",
+    registryLabel: "Registry",
+    variantsLabel: "varian",
+    sizesLabel: "ukuran",
+    matrixLabel: "Matriks varian dan ukuran",
+    statesLabel: "State",
+    targetsLabel: "Ikon dan label panjang",
+    notRequired: "Tidak",
+    sections: {
+      preview: "Pratinjau dan varian",
+      package: "Pasang sebagai paket",
+      copy: "Pasang sebagai salinan",
+      usage: "Pemakaian",
+      props: "Props",
+      dependencies: "Dependensi",
+      accessibility: "Aksesibilitas",
+    },
   },
-} satisfies Record<Locale, Record<string, string>>;
+};
 
-export function docsPath(locale: Locale, slug: string): string {
+export function docsHref(locale: Locale, slug: string): string {
   return locale === "en" ? `/docs/components/${slug}` : `/id/docs/components/${slug}`;
+}
+
+export function markdownHref(locale: Locale, slug: string): string {
+  return locale === "en" ? `/docs/components/${slug}.md` : `/id/docs/components/${slug}.md`;
 }

@@ -1,8 +1,9 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "utils",
+  "type": "registry:lib",
   "title": "Legion cn utility",
-  "description": "The class merge helper used by Legion components.",
+  "description": "Joins conditional class names and resolves Tailwind conflicts.",
   "dependencies": [
     "clsx",
     "tailwind-merge"
@@ -10,10 +11,9 @@
   "files": [
     {
       "path": "packages/ui/src/lib/utils.ts",
-      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]): string {\n  return twMerge(clsx(inputs));\n}\n",
       "type": "registry:lib",
-      "target": "@lib/utils.ts"
+      "target": "@lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\n/** Joins conditional class names and resolves conflicting Tailwind utilities. */\nexport function cn(...inputs: ClassValue[]): string {\n  return twMerge(clsx(inputs));\n}\n"
     }
-  ],
-  "type": "registry:lib"
+  ]
 }

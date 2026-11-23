@@ -1,62 +1,78 @@
-"use client";
-
-import { Button } from "@legionv4/ui";
 import { Search } from "lucide-react";
-import { dictionary, type Locale } from "../i18n";
+import { Button } from "@legionv4/ui";
 
-const variants = ["default", "secondary", "destructive", "outline", "ghost"] as const;
-const sizes = ["sm", "default", "lg"] as const;
+import type { Locale } from "../i18n";
+import { DICTIONARIES } from "../i18n";
+
+const VARIANTS = ["default", "secondary", "destructive", "outline", "ghost"] as const;
+const SIZES = ["sm", "default", "lg"] as const;
 
 export function ButtonShowcase({ locale }: { locale: Locale }) {
-  const copy = dictionary[locale];
-  const labels =
-    locale === "en"
-      ? { variants: "Variants", sizes: "Sizes", states: "States", long: "A long label that wraps instead of clipping" }
-      : { variants: "Varian", sizes: "Ukuran", states: "State", long: "Label panjang yang membungkus, bukan terpotong" };
+  const dictionary = DICTIONARIES[locale];
 
   return (
-    <div className="space-y-8" data-testid="button-showcase">
-      <div>
-        <h3 className="mb-3 font-medium text-foreground">{labels.variants}</h3>
-        <div className="flex flex-wrap items-center gap-2">
-          {variants.map((variant) => (
-            <Button key={variant} variant={variant}>
-              {variant === "default" ? copy.button : variant}
-            </Button>
+    <div className="space-y-10" data-testid="button-showcase">
+      <section aria-labelledby="matrix-heading" className="space-y-4">
+        <h2 id="matrix-heading" className="text-xl font-semibold tracking-tight">
+          {dictionary.matrixLabel}
+        </h2>
+        <div className="space-y-3">
+          {VARIANTS.map((variant) => (
+            <div key={variant} className="flex flex-wrap items-center gap-3">
+              <span className="w-24 shrink-0 text-sm font-medium">{variant}</span>
+              {SIZES.map((size) => (
+                <Button
+                  key={size}
+                  variant={variant}
+                  size={size}
+                  data-testid={`matrix-${variant}-${size}`}
+                >
+                  {variant} {size}
+                </Button>
+              ))}
+            </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div>
-        <h3 className="mb-3 font-medium text-foreground">{labels.sizes}</h3>
-        <div className="flex flex-wrap items-end gap-2">
-          {sizes.map((size) => (
-            <Button key={size} size={size}>
-              {size === "default" ? "Default" : size.toUpperCase()}
-            </Button>
-          ))}
+      <section aria-labelledby="states-heading" className="space-y-4">
+        <h2 id="states-heading" className="text-xl font-semibold tracking-tight">
+          {dictionary.statesLabel}
+        </h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button data-testid="state-default">Default</Button>
+          <Button data-testid="state-loading" loading loadingLabel={locale === "id" ? "Memuat" : "Loading"}>
+            {locale === "id" ? "Menyimpan" : "Saving"}
+          </Button>
+          <Button data-testid="state-disabled" disabled>
+            Disabled
+          </Button>
+          <Button data-testid="state-link" variant="outline" asChild>
+            <a href="#states-heading">Link</a>
+          </Button>
+          <Button data-testid="state-destructive" variant="destructive">
+            Destructive
+          </Button>
         </div>
-      </div>
+      </section>
 
-      <div>
-        <h3 className="mb-3 font-medium text-foreground">{labels.states}</h3>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button disabled>Disabled</Button>
-          <Button loading loadingLabel={locale === "id" ? "Menyimpan" : "Saving"}>
-            {locale === "id" ? "Simpan" : "Save"}
-          </Button>
-          <Button variant="outline" asChild>
-            <a href={locale === "id" ? "/id/docs/components/button" : "/docs/components/button"}>Link</a>
-          </Button>
-          <Button className="size-9" aria-label="Search">
+      <section aria-labelledby="targets-heading" className="space-y-4">
+        <h2 id="targets-heading" className="text-xl font-semibold tracking-tight">
+          {dictionary.targetsLabel}
+        </h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button size="sm" className="size-8" aria-label="Search" data-testid="icon-button">
             <Search aria-hidden="true" />
           </Button>
+          <Button data-testid="icon-text-button">
+            <Search aria-hidden="true" />
+            Search
+          </Button>
+          <Button data-testid="long-label" className="max-w-full">
+            A deliberately long label that must wrap instead of being clipped on narrow screens
+          </Button>
         </div>
-      </div>
-
-      <div className="max-w-40">
-        <Button className="w-full">{labels.long}</Button>
-      </div>
+      </section>
     </div>
   );
 }
