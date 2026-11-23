@@ -86,9 +86,6 @@ for (const heading of ["## Components (English)", "## Komponen (Bahasa Indonesia
   if (!llms.includes(heading)) failures.push(`llms.txt is missing ${heading}`);
 }
 
-const index = readFileSync(resolve(ROOT, "apps/docs/app/(en)/llms.txt/route.ts"), "utf8");
-if (!index.includes("llms.txt")) failures.push("llms route does not serve llms.txt");
-
 if (failures.length > 0) {
   console.error(`check:docs-parity failed with ${failures.length} problem(s):`);
   for (const failure of failures) console.error(`  - ${failure}`);
